@@ -1,1 +1,45 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at 10% 20%, #0a0a1a, #010105);
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* Общий контейнер для страниц (чтобы не прилипало к навбару) */
+main {
+  padding-top: 20px;
+}
+
+/* Стили для ссылок в тексте (общие) */
+a {
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+/* Убираем стандартные полосы прокрутки */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2ecc71;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #26a65b;
+}

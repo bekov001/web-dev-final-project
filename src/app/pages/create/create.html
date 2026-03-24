@@ -1,0 +1,132 @@
+<div class="create-container">
+  <h2>Выставить вещь на барахолку KBTU</h2>
+
+  @if (message) {
+    <p class="success-message">{{ message }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+  <div class="form-group">
+    <label>Название товара:</label>
+    <input 
+      type="text" 
+      [(ngModel)]="newProduct.name" 
+      placeholder="Например: Калькулятор Casio"
+      name="name"
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Цена (KZT):</label>
+    <input 
+      type="number" 
+      [(ngModel)]="newProduct.price"
+      name="price"
+      min="0"
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Описание:</label>
+    <textarea 
+      [(ngModel)]="newProduct.description" 
+      placeholder="Опишите состояние..."
+      rows="4"
+      name="description"
+    ></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Состояние:</label>
+    <select [(ngModel)]="newProduct.condition" name="condition">
+      <option value="New">Новый</option>
+      <option value="Used">Б/У</option>
+    </select>
+  </div>
+
+  
+  <div class="form-group">
+    <label>Категория:</label>
+    <select [(ngModel)]="newProduct.category_id" name="category_id">
+      <option [ngValue]="undefined">Выберите категорию</option>
+      @for (cat of categories; track cat.id) {
+        <option [ngValue]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+      }
+    </select>
+  </div>
+
+ 
+  <div class="form-group">
+    <label>Способ загрузки фото:</label>
+    <div class="photo-options">
+      <label class="radio-option">
+        <input 
+          type="radio" 
+          [(ngModel)]="photoType" 
+          value="url" 
+          name="photoType"
+          (change)="clearPhotoData()"
+        >
+        Ссылка на фото
+      </label>
+      <label class="radio-option">
+        <input 
+          type="radio" 
+          [(ngModel)]="photoType" 
+          value="file" 
+          name="photoType"
+          (change)="clearPhotoData()"
+        >
+        Загрузить файл
+      </label>
+    </div>
+  </div>
+
+  @if (photoType === 'url') {
+    <div class="form-group">
+      <label>Ссылка на фото:</label>
+      <input 
+        type="text" 
+        [(ngModel)]="photoUrl"
+        placeholder="https://example.com/photo.jpg"
+        name="photoUrl"
+      >
+      @if (photoUrl) {
+        <div class="photo-preview">
+          <img [src]="photoUrl" alt="Preview" (error)="onImageError()">
+          <p class="preview-hint">Предпросмотр</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if (photoType === 'file') {
+    <div class="form-group">
+      <label>Выберите фото:</label>
+      <input 
+        type="file" 
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        class="file-input"
+      >
+      @if (selectedFile) {
+        <div class="photo-preview">
+          <img [src]="filePreviewUrl" alt="Preview">
+          <p class="preview-hint">{{ selectedFile.name }}</p>
+          <button type="button" class="remove-photo" (click)="clearFile()">Удалить</button>
+        </div>
+      }
+    </div>
+  }
+
+  <button 
+    class="submit-btn" 
+    (click)="submitProduct()"
+    [disabled]="isLoading"
+  >
+    {{ isLoading ? 'Публикация...' : 'Опубликовать объявление' }}
+  </button>
+</div>

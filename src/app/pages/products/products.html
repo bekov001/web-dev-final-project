@@ -1,0 +1,94 @@
+<div class="products-container">
+  <h2>Витрина KBTU</h2>
+
+  @if (error) {
+    <div class="error-box">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Панель поиска и фильтров -->
+  @if (!isLoading && allProducts.length > 0) {
+    <div class="filters-panel">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (input)="onFilterChange()"
+          placeholder="🔍 Поиск по названию..."
+          class="search-input"
+        >
+      </div>
+
+      <div class="filters-row">
+        <!-- Категории -->
+        <div class="filter-group">
+          <label>Категория:</label>
+          <select [(ngModel)]="selectedCategoryId" (change)="onFilterChange()" class="filter-select">
+            <option [ngValue]="null">📦 Все категории</option>
+            @for (cat of categories; track cat.id) {
+              <option [ngValue]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Кнопка сброса -->
+        <button class="clear-btn" (click)="clearFilters()" *ngIf="searchQuery || selectedCategoryId !== null">
+          Сбросить фильтры
+        </button>
+      </div>
+
+      <!-- Результат поиска -->
+      <div class="search-results-info" *ngIf="searchQuery || selectedCategoryId !== null">
+        Найдено: {{ filteredProducts.length }} из {{ allProducts.length }} объявлений
+      </div>
+    </div>
+  }
+
+  <!-- Загрузка -->
+  @if (isLoading) {
+    <div class="loading">
+      <p>Загрузка товаров...</p>
+    </div>
+  }
+
+  <!-- Список товаров -->
+  @if (!isLoading && filteredProducts.length > 0) {
+    <div class="product-grid">
+      @for (item of filteredProducts; track item.id) {
+        <div class="product-card">
+          @if (item.image) {
+            <img [src]="item.image" [alt]="item.name" class="product-img">
+          } @else {
+            <div class="product-img-placeholder">📷</div>
+          }
+          <h3>{{ item.name }}</h3>
+          <p class="price">{{ item.price }} KZT</p>
+          @if (item.category_id) {
+            <p class="category-badge">{{ getCategoryName(item.category_id) }}</p>
+          }
+          <a [routerLink]="['/products', item.id]" class="details-link">
+            Подробнее
+          </a>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Пустое состояние (нет товаров вообще) -->
+  @if (!isLoading && allProducts.length === 0 && !error) {
+    <div class="empty-state">
+      <p>😕 На витрине пока нет товаров.</p>
+      <p>Станьте первым продавцом!</p>
+      <a routerLink="/create" class="create-link">➕ Выставить товар</a>
+    </div>
+  }
+
+  <!-- Нет результатов по поиску -->
+  @if (!isLoading && allProducts.length > 0 && filteredProducts.length === 0 && !error) {
+    <div class="empty-state">
+      <p>😕 Ничего не найдено по вашему запросу</p>
+      <button class="clear-btn" (click)="clearFilters()">Очистить фильтры</button>
+    </div>
+  }
+</div>

@@ -1,0 +1,45 @@
+<div class="login-container">
+  <div class="auth-header">
+    <h1 class="layered-logo">
+      <span class="top-level">KBTU</span>
+      <span class="bottom-level">Marketplace</span>
+    </h1>
+    <p>Авторизуйтесь, чтобы продолжить</p>
+  </div>
+
+  <form (ngSubmit)="onLogin()">
+    <div class="form-field">
+      <input 
+        type="email" 
+        placeholder="Email" 
+        [(ngModel)]="loginData.email"
+        name="email"
+        required
+      >
+    </div>
+    
+    <div class="form-field">
+      <input 
+        type="password" 
+        placeholder="Пароль" 
+        [(ngModel)]="loginData.password"
+        name="password"
+        required
+      >
+      <a href="#" class="forgot-link" (click)="$event.preventDefault(); forgotPassword()">Забыли пароль?</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" class="login-btn" [disabled]="isLoading">
+      {{ isLoading ? 'Вход...' : 'Войти' }}
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <span>Нет аккаунта?</span>
+    <a routerLink="/register" class="register-link">Создать профиль</a>
+  </div>
+</div>

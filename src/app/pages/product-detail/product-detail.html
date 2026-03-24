@@ -1,0 +1,71 @@
+<div class="detail-container">
+  <!-- Загрузка -->
+  @if (isLoading) {
+    <div class="loader">
+      <p>Загрузка информации о товаре...</p>
+    </div>
+  }
+
+  <!-- Ошибка -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <div class="error-box">
+        <p>{{ errorMessage }}</p>
+        <a routerLink="/products" class="back-link">← Вернуться к списку товаров</a>
+      </div>
+    </div>
+  }
+
+  <!-- Товар найден -->
+  @if (!isLoading && !errorMessage && product) {
+    <div class="product-detail-card">
+      <!-- Кнопка назад -->
+      <div class="back-button">
+        <a routerLink="/products" class="back-link">← Назад к товарам</a>
+      </div>
+
+      <div class="detail-content">
+        <!-- Фото товара -->
+        <div class="image-section">
+          @if (product.image) {
+            <img [src]="product.image" [alt]="product.name" class="main-image">
+          } @else {
+            <div class="image-placeholder">📷</div>
+          }
+        </div>
+
+        <!-- Информация о товаре -->
+        <div class="info-section">
+          <h1 class="product-title">{{ product.name }}</h1>
+          
+          <div class="price-tag">
+            {{ product.price }} KZT
+          </div>
+
+          <!-- Категория -->
+          <div class="detail-row" *ngIf="product.category_id">
+            <span class="detail-label">Категория:</span>
+            <span class="detail-value">{{ getCategoryName(product.category_id) }}</span>
+          </div>
+
+          <!-- Состояние -->
+          <div class="detail-row">
+            <span class="detail-label">Состояние:</span>
+            <span class="detail-value condition-badge">{{ getConditionText(product.condition) }}</span>
+          </div>
+
+          <!-- Описание -->
+          <div class="description-box">
+            <h3>Описание товара</h3>
+            <p>{{ product.description || 'Описание отсутствует' }}</p>
+          </div>
+
+          <!-- Кнопка связи -->
+          <button class="contact-btn" (click)="contactSeller()">
+            📞 Связаться с продавцом
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

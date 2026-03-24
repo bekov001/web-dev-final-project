@@ -1,0 +1,196 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      @if (userProfile.avatar) {
+        <img [src]="userProfile.avatar" alt="Аватар" class="avatar-img">
+      } @else {
+        <div class="avatar-placeholder">
+          {{ userProfile.full_name.charAt(0) || '👤' }}
+        </div>
+      }
+    </div>
+    
+    <div class="profile-info">
+      @if (!isEditingProfile) {
+        <h1>{{ userProfile.full_name || 'Пользователь KBTU' }}</h1>
+        <p class="profile-email">{{ userProfile.email }}</p>
+        @if (userProfile.memberSince) {
+          <p class="profile-member">С нами с {{ userProfile.memberSince }}</p>
+        }
+        <button class="edit-profile-btn" (click)="toggleEditProfile()">
+          ✏️ Редактировать профиль
+        </button>
+      } @else {
+        <div class="edit-profile-form">
+          <div class="form-group">
+            <label>Имя:</label>
+            <input type="text" [(ngModel)]="editProfileData.full_name" placeholder="Ваше имя">
+          </div>
+          <div class="form-group">
+            <label>Аватар (URL):</label>
+            <input type="text" [(ngModel)]="editProfileData.avatar" placeholder="https://example.com/avatar.jpg">
+          </div>
+          <div class="edit-actions">
+            <button class="save-btn" (click)="saveProfile()">💾 Сохранить</button>
+            <button class="cancel-btn" (click)="toggleEditProfile()">Отмена</button>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Статистика -->
+    <div class="profile-stats">
+      <div class="stat-item">
+        <span class="stat-number">{{ stats.total }}</span>
+        <span class="stat-label">Всего</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ stats.active }}</span>
+        <span class="stat-label">Активно</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ stats.sold }}</span>
+        <span class="stat-label">Продано</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кнопка выхода -->
+  <div class="logout-section">
+    <button class="logout-btn" (click)="logout()">🚪 Выйти из аккаунта</button>
+  </div>
+
+  <!-- Мои объявления -->
+  <div class="my-products-section">
+    <h2>Мои объявления</h2>
+
+    @if (successMessage) {
+      <p class="success-message">{{ successMessage }}</p>
+    }
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+
+    <!-- Панель фильтров -->
+    @if (!isLoading && allProducts.length > 0) {
+      <div class="filters-panel">
+        <div class="search-box">
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            (input)="onFilterChange()"
+            placeholder="🔍 Поиск по названию..."
+            class="search-input"
+          >
+        </div>
+
+        <div class="filters-row">
+          <div class="filter-group">
+            <label>Категория:</label>
+            <div class="filter-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="showSold" (change)="onFilterChange()">
+                Показывать проданные
+              </label>
+            </div>
+            <select [(ngModel)]="selectedCategoryId" (change)="onFilterChange()" class="filter-select">
+              <option [ngValue]="null">📦 Все категории</option>
+              @for (cat of categories; track cat.id) {
+                <option [ngValue]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Сортировать:</label>
+            <div class="filter-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="showSold" (change)="onFilterChange()">
+                Показывать проданные
+              </label>
+            </div>
+            <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="filter-select">
+              <option value="date_desc">📅 Сначала новые</option>
+              <option value="price_asc">💰 Сначала дешевые</option>
+              <option value="price_desc">💰 Сначала дорогие</option>
+              <option value="name_asc">🔤 По названию (А-Я)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="showSold" (change)="onFilterChange()">
+              Показывать проданные
+            </label>
+          </div>
+
+          <button class="clear-btn" (click)="clearFilters()" *ngIf="searchQuery || selectedCategoryId !== null">
+            Сбросить
+          </button>
+        </div>
+
+        <div class="search-results-info" *ngIf="searchQuery || selectedCategoryId !== null">
+          Найдено: {{ filteredProducts.length }} из {{ allProducts.length }}
+        </div>
+      </div>
+    }
+
+    <!-- Загрузка -->
+    @if (isLoading) {
+      <div class="loading">
+        <p>Загрузка ваших объявлений...</p>
+      </div>
+    }
+
+    <!-- Список товаров -->
+    @if (!isLoading && filteredProducts.length > 0) {
+      <div class="products-list">
+        @for (product of filteredProducts; track product.id) {
+          <div class="product-item">
+            <div class="product-info">
+              @if (product.image) {
+                <img [src]="product.image" alt="{{ product.name }}" class="product-image">
+              } @else {
+                <div class="product-image-placeholder">📷</div>
+              }
+              <div class="product-details">
+                <h3>{{ product.name }}</h3>
+                <p class="price">{{ product.price }} KZT</p>
+                <p class="condition">Состояние: {{ product.condition === 'New' ? 'Новый' : 'Б/У' }}</p>
+                @if (product.category_id) {
+                  <p class="category">{{ getCategoryName(product.category_id) }}</p>
+                }
+              </div>
+            </div>
+            <div class="product-actions">
+              @if (!product.is_sold) {
+                <button class="sold-btn" (click)="markAsSold(product.id)">
+                  ✅ Продано
+                </button>
+              }
+              <button class="delete-btn" (click)="removeProduct(product.id)">
+                🗑️ Удалить
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Нет товаров -->
+    @if (!isLoading && allProducts.length === 0 && !errorMessage) {
+      <div class="empty-state">
+        <p>📦 У вас пока нет объявлений.</p>
+        <a routerLink="/create" class="create-link">➕ Разместить первое объявление</a>
+      </div>
+    }
+
+    <!-- Нет результатов по поиску -->
+    @if (!isLoading && allProducts.length > 0 && filteredProducts.length === 0 && !errorMessage) {
+      <div class="empty-state">
+        <p>😕 Ничего не найдено</p>
+        <button class="clear-btn" (click)="clearFilters()">Очистить фильтры</button>
+      </div>
+    }
+  </div>
+</div>

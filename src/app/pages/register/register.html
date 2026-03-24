@@ -1,0 +1,67 @@
+<div class="register-container">
+  <div class="auth-header">
+    <h1 class="layered-logo">
+      <span class="top-level">KBTU</span>
+      <span class="bottom-level">Marketplace</span>
+    </h1>
+    <p>Создайте новый аккаунт</p>
+  </div>
+
+  <form (ngSubmit)="onRegister()">
+    <div class="form-field">
+      <input 
+        type="email" 
+        placeholder="Email *" 
+        [(ngModel)]="registerData.email"
+        name="email"
+        required
+      >
+    </div>
+
+    <div class="form-field">
+      <input 
+        type="text" 
+        placeholder="Полное имя" 
+        [(ngModel)]="registerData.full_name"
+        name="full_name"
+      >
+    </div>
+
+    <div class="form-field">
+      <input 
+        type="password" 
+        placeholder="Пароль *" 
+        [(ngModel)]="registerData.password"
+        name="password"
+        required
+      >
+    </div>
+
+    <div class="form-field">
+      <input 
+        type="password" 
+        placeholder="Подтвердите пароль *" 
+        [(ngModel)]="registerData.password2"
+        name="password2"
+        required
+      >
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+    <button type="submit" class="register-btn" [disabled]="isLoading">
+      {{ isLoading ? 'Регистрация...' : 'Зарегистрироваться' }}
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <span>Уже есть аккаунт?</span>
+    <a routerLink="/login" class="login-link">Войти</a>
+  </div>
+</div>
