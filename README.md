@@ -1,63 +1,84 @@
-<<<<<<< HEAD
-# Marketplace
+# KBTU Predictions
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Prediction market platform inspired by Polymarket. Users can create markets with Yes/No outcomes, place predictions, and discuss in comments.
 
-## Development server
+Built with Angular (frontend) and Django + DRF (backend).
 
-To start a local development server, run:
+## Tech Stack
 
-```bash
-ng serve
-```
+- **Frontend:** Angular 21, TypeScript, RxJS
+- **Backend:** Django 4.2, Django REST Framework
+- **Database:** SQLite
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## How to Run
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Backend
 
 ```bash
-ng generate component component-name
+cd backend
+pip install django djangorestframework django-cors-headers
+python3 manage.py migrate
+python3 manage.py runserver
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To seed test data:
 
 ```bash
-ng generate --help
+python3 seed.py
 ```
 
-## Building
+Backend runs on `http://localhost:8000`
 
-To build the project run:
+### Frontend
 
 ```bash
-ng build
+cd frontend
+npm install
+npx ng serve
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Frontend runs on `http://localhost:4200`
 
-## Running unit tests
+## Features
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+- Browse prediction markets by category
+- Search markets
+- Create new markets with a question, description, category, and end date
+- Vote Yes or No on any market
+- Comment and discuss markets
+- Delete markets
+- Filter by category (Politics, Crypto, Sports, Tech, Science)
 
-```bash
-ng test
+## API Endpoints
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | /api/categories/ | List categories |
+| POST | /api/categories/ | Create category |
+| GET | /api/markets/ | List markets |
+| POST | /api/markets/ | Create market |
+| GET | /api/markets/:id/ | Market detail |
+| PUT | /api/markets/:id/ | Update market |
+| DELETE | /api/markets/:id/ | Delete market |
+| GET | /api/trades/?market_id=X | List trades |
+| POST | /api/trades/ | Place trade |
+| GET | /api/comments/?market_id=X | List comments |
+| POST | /api/comments/ | Add comment |
+
+## Project Structure
+
+```
+backend/
+  config/          # Django settings, urls
+  markets/         # Models, serializers, views
+  seed.py          # Test data seeder
+frontend/
+  src/app/
+    pages/         # Home, MarketDetail, CreateMarket
+    services/      # API service (HttpClient)
+    models/        # TypeScript interfaces
 ```
 
-## Running end-to-end tests
+## Group Members
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# web-dev-final-project
->>>>>>> dba4708391e100214d331eaec6f7de63e1bc9b9d
+- Bekov Anuar
