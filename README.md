@@ -1,3 +1,4 @@
+
 # KBTU Predictions
 
 Prediction market platform inspired by Polymarket. Users can create markets with Yes/No outcomes and place predictions.
@@ -81,3 +82,5 @@ frontend/
 - Anuar Batyrbekov
 
 - Zhaisan Yerali
+
+- Yerasyl Yermekkhan
