@@ -6,7 +6,7 @@ django.setup()
 
 from django.utils import timezone
 from datetime import timedelta
-from markets.models import Category, Market, Trade, Comment
+from markets.models import Category, Market, Trade
 
 Category.objects.all().delete()
 
@@ -37,7 +37,6 @@ for title, desc, cat, end in markets_data:
     # Add some trades
     for name, choice in [('Alice', True), ('Bob', False), ('Charlie', True), ('Diana', True), ('Eve', False)]:
         Trade.objects.create(market=m, trader_name=name, choice=choice)
-    Comment.objects.create(market=m, author_name='Alice', text='Interesting market! I think YES.')
-    Comment.objects.create(market=m, author_name='Bob', text='Not sure about this one, going with NO.')
+    
 
-print(f'Seeded {Category.objects.count()} categories, {Market.objects.count()} markets, {Trade.objects.count()} trades, {Comment.objects.count()} comments')
+print(f'Seeded {Category.objects.count()} categories, {Market.objects.count()} markets, {Trade.objects.count()} trades')

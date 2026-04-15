@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Market, Trade, Comment
+from .models import Category, Market, Trade
 
 
 # serializers.Serializer (2 required)
@@ -16,23 +16,6 @@ class TradeSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.trader_name = validated_data.get('trader_name', instance.trader_name)
         instance.choice = validated_data.get('choice', instance.choice)
-        instance.save()
-        return instance
-
-
-class CommentSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    market = serializers.PrimaryKeyRelatedField(queryset=Market.objects.all())
-    author_name = serializers.CharField(max_length=100)
-    text = serializers.CharField()
-    created_at = serializers.DateTimeField(read_only=True)
-
-    def create(self, validated_data):
-        return Comment.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.author_name = validated_data.get('author_name', instance.author_name)
-        instance.text = validated_data.get('text', instance.text)
         instance.save()
         return instance
 

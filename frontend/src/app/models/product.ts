@@ -28,11 +28,3 @@ export interface Trade {
   choice: boolean;
   created_at: string;
 }
-
-export interface Comment {
-  id: number;
-  market: number;
-  author_name: string;
-  text: string;
-  created_at: string;
-}

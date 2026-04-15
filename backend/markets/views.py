@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Category, Market, Trade, Comment
+from .models import Category, Market, Trade
 from .serializers import (
     CategorySerializer, MarketSerializer,
-    TradeSerializer, CommentSerializer,
+    TradeSerializer,
 )
 
 
@@ -23,23 +23,6 @@ def trade_list_create(request):
         return Response(serializer.data)
 
     serializer = TradeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'POST'])
-def comment_list_create(request):
-    if request.method == 'GET':
-        market_id = request.query_params.get('market_id')
-        comments = Comment.objects.all().order_by('-created_at')
-        if market_id:
-            comments = comments.filter(market_id=market_id)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
-
-    serializer = CommentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
