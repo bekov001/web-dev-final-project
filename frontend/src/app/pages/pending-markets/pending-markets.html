@@ -1,0 +1,32 @@
+<div class="pending-container">
+  <div class="header">
+    <h1>Pending Markets</h1>
+    <a routerLink="/" class="back-link">Back to markets</a>
+  </div>
+
+  @if (successMessage) {
+    <div class="success-banner">{{ successMessage }}</div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-banner">{{ errorMessage }}</div>
+  }
+
+  @if (!auth.isModeratorOrAdmin) {
+    <div class="error-banner">Login as moderator/admin to approve markets.</div>
+  } @else if (markets.length === 0) {
+    <div class="empty-state">No pending markets.</div>
+  } @else {
+    <div class="list">
+      @for (market of markets; track market.id) {
+        <div class="item">
+          <div class="meta">
+            <h3>{{ market.title }}</h3>
+            <p>{{ market.description }}</p>
+          </div>
+          <button class="approve-btn" (click)="approveMarket(market.id)">Approve</button>
+        </div>
+      }
+    </div>
+  }
+</div>

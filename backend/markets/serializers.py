@@ -10,6 +10,13 @@ class TradeSerializer(serializers.Serializer):
     choice = serializers.BooleanField()
     created_at = serializers.DateTimeField(read_only=True)
 
+    def validate_market(self, market):
+        if not market.approved:
+            raise serializers.ValidationError(
+                'This market is pending moderator/admin approval.'
+            )
+        return market
+
     def create(self, validated_data):
         return Trade.objects.create(**validated_data)
 
@@ -32,6 +39,9 @@ class MarketSerializer(serializers.ModelSerializer):
     no_count = serializers.IntegerField(read_only=True)
     yes_percentage = serializers.IntegerField(read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
+    approved = serializers.BooleanField(read_only=True)
+    approved_at = serializers.DateTimeField(read_only=True)
+    approved_by_name = serializers.CharField(source='approved_by.username', read_only=True)
 
     class Meta:
         model = Market
@@ -39,4 +49,5 @@ class MarketSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'category', 'category_name',
             'created_at', 'end_date', 'is_resolved', 'resolved_outcome',
             'image_url', 'yes_count', 'no_count', 'yes_percentage',
+            'approved', 'approved_at', 'approved_by_name',
         ]

@@ -8,13 +8,14 @@
   background: rgba(10, 10, 26, 0.85);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.8rem 2rem;
+  padding: 0.95rem 2rem 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 1000;
+  overflow: visible;
 }
 
 .nav-brand .logo {
@@ -49,7 +50,7 @@
   font-weight: 500;
   padding: 0.4rem 0;
   transition: color 0.2s;
-  border-bottom: 2px solid transparent;
+  border-bottom: none;
 }
 
 .nav-links a:hover {
@@ -58,16 +59,21 @@
 
 .nav-links a.active {
   color: #007bff;
-  border-bottom-color: #007bff;
+  border-bottom: none;
 }
 
 .create-btn {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
   color: #007bff !important;
-  border: 2px solid #007bff;
+  border: none;
   padding: 6px 14px;
   border-radius: 8px;
   font-weight: 600;
+  line-height: 1.2;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .create-btn:hover {
@@ -78,5 +84,16 @@
 .create-btn.active {
   background-color: #007bff;
   color: white !important;
-  border-color: #007bff;
+}
+
+.logout-btn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.logout-btn:hover {
+  color: #ff6b6b;
 }

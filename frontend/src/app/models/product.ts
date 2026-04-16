@@ -19,6 +19,9 @@ export interface Market {
   yes_count: number;
   no_count: number;
   yes_percentage: number;
+  approved: boolean;
+  approved_at: string | null;
+  approved_by_name: string | null;
 }
 
 export interface Trade {
@@ -27,4 +30,11 @@ export interface Trade {
   trader_name: string;
   choice: boolean;
   created_at: string;
+}
+
+export interface CurrentUser {
+  username: string;
+  is_staff: boolean;
+  is_superuser: boolean;
+  is_moderator_or_admin: boolean;
 }

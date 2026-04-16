@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Category, Market, Trade } from '../models/product';
+import { Category, CurrentUser, Market, Trade } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +28,12 @@ export class Api {
     return this.http.get<Market[]>(url).pipe(catchError(this.handleError));
   }
 
+  getPendingMarkets(): Observable<Market[]> {
+    return this.http.get<Market[]>(`${this.baseUrl}/markets/pending/`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getMarket(id: number): Observable<Market> {
     return this.http.get<Market>(`${this.baseUrl}/markets/${id}/`).pipe(
       catchError(this.handleError)
@@ -42,6 +48,18 @@ export class Api {
 
   updateMarket(id: number, data: any): Observable<Market> {
     return this.http.put<Market>(`${this.baseUrl}/markets/${id}/`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  approveMarket(id: number): Observable<Market> {
+    return this.http.post<Market>(`${this.baseUrl}/markets/${id}/approve/`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getCurrentUser(): Observable<CurrentUser> {
+    return this.http.get<CurrentUser>(`${this.baseUrl}/auth/me/`).pipe(
       catchError(this.handleError)
     );
   }
@@ -73,6 +91,10 @@ export class Api {
       errorMessage = 'Invalid data';
     } else if (error.status === 404) {
       errorMessage = 'Not found';
+    } else if (error.status === 401) {
+      errorMessage = 'Unauthorized';
+    } else if (error.status === 403) {
+      errorMessage = 'Forbidden';
     } else if (error.status === 0) {
       errorMessage = 'Server is not running';
     }
