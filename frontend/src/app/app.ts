@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from './services/auth';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,18 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   title = 'KBTU Predict';
+
+  constructor(public auth: AuthService) {}
+
+  ngOnInit() {
+    this.auth.refreshMe().subscribe({
+      error: () => this.auth.logout(),
+    });
+  }
+
+  logout() {
+    this.auth.logout();
+  }
 }

@@ -56,7 +56,7 @@ export class MarketDetail implements OnInit {
   }
 
   placeTrade(choice: boolean) {
-    if (!this.market) return;
+    if (!this.market || !this.market.approved) return;
     this.api.createTrade({
       market: this.market.id,
       trader_name: 'Anonymous',
@@ -72,6 +72,10 @@ export class MarketDetail implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  get canPlaceTrade() {
+    return this.market?.approved ?? false;
   }
 
   deleteMarket() {
