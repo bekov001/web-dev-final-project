@@ -9,6 +9,16 @@
     <div class="nav-links">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Markets</a>
       <a routerLink="/create" routerLinkActive="active" class="create-btn">+ Create</a>
+
+      @if (auth.user$ | async; as user) {
+        <div class="user-info">
+          <span class="points-badge">{{ user.points }} pts</span>
+          <span class="username">{{ user.username }}</span>
+          <a class="logout-btn" (click)="logout()">Logout</a>
+        </div>
+      } @else {
+        <a routerLink="/auth" routerLinkActive="active" class="login-btn">Sign In</a>
+      }
     </div>
   </nav>
 
