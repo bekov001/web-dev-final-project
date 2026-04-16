@@ -83,3 +83,5 @@ frontend/
 - Anuar Batyrbekov
 
 - Zhaisan Yerali
+  
+- Yermekkhan Yerasyl
