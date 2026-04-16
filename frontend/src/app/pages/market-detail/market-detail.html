@@ -38,10 +38,18 @@
     <!-- Trade section -->
     <div class="trade-section">
       <h2>Place Your Prediction</h2>
-      <div class="trade-buttons">
-        <button class="btn-yes" (click)="placeTrade(true)">Buy Yes</button>
-        <button class="btn-no" (click)="placeTrade(false)">Buy No</button>
-      </div>
+      @if (auth.isLoggedIn) {
+        <p class="trade-cost">Each prediction costs 1 point</p>
+        <div class="trade-buttons">
+          <button class="btn-yes" (click)="placeTrade(true)">Buy Yes</button>
+          <button class="btn-no" (click)="placeTrade(false)">Buy No</button>
+        </div>
+      } @else {
+        <div class="login-prompt">
+          <p>You need to sign in to place predictions</p>
+          <a routerLink="/auth" class="btn-login">Sign In</a>
+        </div>
+      }
     </div>
 
     <!-- Recent trades -->

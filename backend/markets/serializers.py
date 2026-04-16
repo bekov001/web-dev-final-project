@@ -1,12 +1,38 @@
 from rest_framework import serializers
-from .models import Category, Market, Trade
+from django.contrib.auth.models import User
+from .models import Category, Market, Trade, UserProfile
+
+
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(write_only=True, min_length=4)
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError('Username already taken')
+        return value
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+        )
+        return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ['username', 'points']
 
 
 # serializers.Serializer (2 required)
 class TradeSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     market = serializers.PrimaryKeyRelatedField(queryset=Market.objects.all())
-    trader_name = serializers.CharField(max_length=100)
+    trader_name = serializers.CharField(max_length=100, read_only=True)
     choice = serializers.BooleanField()
     created_at = serializers.DateTimeField(read_only=True)
 
@@ -14,7 +40,6 @@ class TradeSerializer(serializers.Serializer):
         return Trade.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.trader_name = validated_data.get('trader_name', instance.trader_name)
         instance.choice = validated_data.get('choice', instance.choice)
         instance.save()
         return instance

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../../services/api';
+import { AuthService } from '../../services/auth';
 import { Market, Trade } from '../../models/product';
 
 @Component({
@@ -17,10 +18,9 @@ export class MarketDetail implements OnInit {
   trades: Trade[] = [];
   errorMessage: string = '';
 
-  traderName: string = '';
-
   constructor(
     private api: Api,
+    public auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -57,18 +57,28 @@ export class MarketDetail implements OnInit {
 
   placeTrade(choice: boolean) {
     if (!this.market) return;
+
+    if (!this.auth.isLoggedIn) {
+      this.router.navigate(['/auth']);
+      return;
+    }
+
     this.api.createTrade({
       market: this.market.id,
-      trader_name: 'Anonymous',
       choice: choice
     }).subscribe({
       next: () => {
         this.loadMarket(this.market!.id);
         this.loadTrades(this.market!.id);
+        this.auth.loadProfile();
         this.errorMessage = '';
       },
       error: (err) => {
-        this.errorMessage = err.message;
+        if (err.error?.detail) {
+          this.errorMessage = err.error.detail;
+        } else {
+          this.errorMessage = err.message;
+        }
         this.cdr.detectChanges();
       }
     });
