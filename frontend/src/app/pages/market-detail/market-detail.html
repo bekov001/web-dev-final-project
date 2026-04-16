@@ -61,36 +61,6 @@
       }
     </div>
 
-    <!-- Comments -->
-    <div class="comments-section">
-      <h2>Discussion</h2>
-      <div class="comment-form">
-        <input
-          type="text"
-          placeholder="Your name"
-          [(ngModel)]="commentAuthor"
-          class="comment-input"
-        />
-        <textarea
-          placeholder="Write a comment..."
-          [(ngModel)]="commentText"
-          class="comment-textarea"
-          rows="3"
-        ></textarea>
-        <button class="btn-comment" (click)="addComment()">Post Comment</button>
-      </div>
-
-      @for (comment of comments; track comment.id) {
-        <div class="comment-item">
-          <div class="comment-header">
-            <strong>{{ comment.author_name }}</strong>
-            <span class="comment-time">{{ comment.created_at | date:'short' }}</span>
-          </div>
-          <p>{{ comment.text }}</p>
-        </div>
-      }
-    </div>
-
     <!-- Admin actions -->
     <div class="admin-actions">
       <button class="btn-delete" (click)="deleteMarket()">Delete Market</button>

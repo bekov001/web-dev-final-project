@@ -6,5 +6,4 @@ urlpatterns = [
     path('markets/', views.MarketListCreateView.as_view()),
     path('markets/<int:pk>/', views.MarketDetailView.as_view()),
     path('trades/', views.trade_list_create),
-    path('comments/', views.comment_list_create),
 ]

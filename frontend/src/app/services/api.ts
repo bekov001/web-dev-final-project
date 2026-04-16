@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Category, Market, Trade, Comment } from '../models/product';
+import { Category, Market, Trade } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
@@ -61,19 +61,6 @@ export class Api {
 
   createTrade(data: any): Observable<Trade> {
     return this.http.post<Trade>(`${this.baseUrl}/trades/`, data).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  // Comments
-  getComments(marketId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.baseUrl}/comments/?market_id=${marketId}`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  createComment(data: any): Observable<Comment> {
-    return this.http.post<Comment>(`${this.baseUrl}/comments/`, data).pipe(
       catchError(this.handleError)
     );
   }

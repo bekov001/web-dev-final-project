@@ -30,7 +30,7 @@
 }
 
 .logo-predict {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: linear-gradient(135deg, #007bff, #0056b3);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -53,10 +53,30 @@
 }
 
 .nav-links a:hover {
-  color: #2ecc71;
+  color: #007bff;
 }
 
 .nav-links a.active {
-  color: #2ecc71;
-  border-bottom-color: #2ecc71;
+  color: #007bff;
+  border-bottom-color: #007bff;
+}
+
+.create-btn {
+  color: #007bff !important;
+  border: 2px solid #007bff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+  background-color: #007bff;
+  color: white !important;
+}
+
+.create-btn.active {
+  background-color: #007bff;
+  color: white !important;
+  border-color: #007bff;
 }

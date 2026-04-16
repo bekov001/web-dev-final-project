@@ -1,6 +1,6 @@
 # KBTU Predictions
 
-Prediction market platform inspired by Polymarket. Users can create markets with Yes/No outcomes, place predictions, and discuss in comments.
+Prediction market platform inspired by Polymarket. Users can create markets with Yes/No outcomes and place predictions.
 
 Built with Angular (frontend) and Django + DRF (backend).
 
@@ -47,7 +47,6 @@ Frontend runs on `http://localhost:4200`
 - Search markets
 - Create new markets with a question, description, category, and end date
 - Vote Yes or No on any market
-- Comment and discuss markets
 - Delete markets
 - Filter by category (Politics, Crypto, Sports, Tech, Science)
 
@@ -64,8 +63,6 @@ Frontend runs on `http://localhost:4200`
 | DELETE | /api/markets/:id/ | Delete market |
 | GET | /api/trades/?market_id=X | List trades |
 | POST | /api/trades/ | Place trade |
-| GET | /api/comments/?market_id=X | List comments |
-| POST | /api/comments/ | Add comment |
 
 ## Project Structure
 
@@ -83,4 +80,6 @@ frontend/
 
 ## Group Members
 
-- Bekov Anuar
+- Anuar Batyrbekov
+
+- Zhaisan Yerali
