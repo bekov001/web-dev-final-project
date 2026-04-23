@@ -6,21 +6,20 @@ import { AuthService } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
-  const authHeader = auth.authHeader;
-  if (!authHeader) {
+  const token = auth.getToken();
+  if (!token) {
     return next(req);
   }
 
   const requestWithAuth = req.clone({
     setHeaders: {
-      Authorization: authHeader,
+      Authorization: `Bearer ${token}`,
     },
   });
 
   return next(requestWithAuth).pipe(
     catchError((error) => {
       if (error.status === 401) {
-        // Stale/invalid stored credentials should not break public pages.
         auth.logout();
         if (req.method === 'GET') {
           return next(req);

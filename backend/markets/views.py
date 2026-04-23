@@ -1,16 +1,45 @@
 from django.utils import timezone
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Category, Market, Trade
 from .serializers import (
     CategorySerializer, MarketSerializer,
-    TradeSerializer,
+    TradeSerializer, RegisterSerializer, UserProfileSerializer,
 )
 from .permissions import IsModeratorOrAdmin, is_moderator_or_admin
+
+
+# ---- Auth Views ----
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_view(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'user': UserProfileSerializer(user.profile).data,
+        }, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me_view(request):
+    serializer = UserProfileSerializer(request.user.profile)
+    data = dict(serializer.data)
+    data['is_staff'] = request.user.is_staff
+    data['is_superuser'] = request.user.is_superuser
+    data['is_moderator_or_admin'] = is_moderator_or_admin(request.user)
+    return Response(data)
 
 
 # ---- Function-Based Views (2 required) ----
@@ -25,9 +54,25 @@ def trade_list_create(request):
         serializer = TradeSerializer(trades, many=True)
         return Response(serializer.data)
 
+    # POST requires auth
+    if not request.user or not request.user.is_authenticated:
+        return Response(
+            {'detail': 'Authentication required to place a trade.'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    profile = request.user.profile
+    if profile.points < 1:
+        return Response(
+            {'detail': 'Not enough points. You need at least 1 point to trade.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     serializer = TradeSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        profile.points -= 1
+        profile.save()
+        serializer.save(user=request.user, trader_name=request.user.username)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -138,23 +183,3 @@ class MarketApproveView(APIView):
 
         serializer = MarketSerializer(market)
         return Response(serializer.data)
-
-
-class AuthMeView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        return Response({
-            'username': user.username,
-            'is_staff': user.is_staff,
-            'is_superuser': user.is_superuser,
-            'is_moderator_or_admin': is_moderator_or_admin(user),
-        })
-
-
-class AuthPingView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        return Response({'ok': True})

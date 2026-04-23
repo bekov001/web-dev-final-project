@@ -1,22 +1,30 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CurrentUser } from '../models/product';
-import { Api } from './api';
+
+interface AuthResponse {
+  access: string;
+  refresh: string;
+  user: CurrentUser;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly authStorageKey = 'kbtu_basic_auth';
-  private readonly userStorageKey = 'kbtu_current_user';
-
-  private userSubject = new BehaviorSubject<CurrentUser | null>(this.loadStoredUser());
+  private baseUrl = 'http://localhost:8000/api/auth';
+  private userSubject = new BehaviorSubject<CurrentUser | null>(null);
   user$ = this.userSubject.asObservable();
 
-  constructor(private api: Api) {}
+  constructor(private http: HttpClient) {
+    if (this.getToken()) {
+      this.loadProfile();
+    }
+  }
 
-  get authHeader(): string | null {
-    return localStorage.getItem(this.authStorageKey);
+  get isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 
   get currentUser(): CurrentUser | null {
@@ -27,45 +35,38 @@ export class AuthService {
     return this.currentUser?.is_moderator_or_admin ?? false;
   }
 
-  login(username: string, password: string): Observable<CurrentUser> {
-    const raw = `${username}:${password}`;
-    const authHeader = `Basic ${btoa(raw)}`;
-    localStorage.setItem(this.authStorageKey, authHeader);
-    return this.api.getCurrentUser().pipe(
-      tap((user) => {
-        this.userSubject.next(user);
-        localStorage.setItem(this.userStorageKey, JSON.stringify(user));
-      })
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  register(username: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/register/`, { username, password }).pipe(
+      tap(res => this.setSession(res))
     );
   }
 
-  refreshMe(): Observable<CurrentUser | null> {
-    if (!this.authHeader) {
-      this.logout();
-      return of(null);
-    }
-    return this.api.getCurrentUser().pipe(
-      tap((user) => {
-        this.userSubject.next(user);
-        localStorage.setItem(this.userStorageKey, JSON.stringify(user));
-      })
+  login(username: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/login/`, { username, password }).pipe(
+      tap(res => this.setSession(res))
     );
   }
 
   logout() {
-    localStorage.removeItem(this.authStorageKey);
-    localStorage.removeItem(this.userStorageKey);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     this.userSubject.next(null);
   }
 
-  private loadStoredUser(): CurrentUser | null {
-    const raw = localStorage.getItem(this.userStorageKey);
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw) as CurrentUser;
-    } catch {
-      localStorage.removeItem(this.userStorageKey);
-      return null;
-    }
+  loadProfile() {
+    this.http.get<CurrentUser>(`${this.baseUrl}/me/`).subscribe({
+      next: (profile) => this.userSubject.next(profile),
+      error: () => this.logout(),
+    });
+  }
+
+  private setSession(res: AuthResponse) {
+    localStorage.setItem('access_token', res.access);
+    localStorage.setItem('refresh_token', res.refresh);
+    this.loadProfile();
   }
 }

@@ -13,7 +13,7 @@ def remove_moderator_group(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('markets', '0003_market_approved_market_approved_at_and_more'),
+        ('markets', '0004_market_approved_market_approved_at_and_more'),
     ]
 
     operations = [
