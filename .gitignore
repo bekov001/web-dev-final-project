@@ -20,6 +20,8 @@ yarn-error.log
 __pycache__/
 *.pyc
 db.sqlite3
+venv/
+.venv/
 
 # System files
 .DS_Store

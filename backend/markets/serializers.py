@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Category, Market, Trade, UserProfile
@@ -22,6 +23,9 @@ class RegisterSerializer(serializers.Serializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    points = serializers.DecimalField(
+        max_digits=12, decimal_places=4, coerce_to_string=False, read_only=True,
+    )
 
     class Meta:
         model = UserProfile
@@ -34,6 +38,9 @@ class TradeSerializer(serializers.Serializer):
     market = serializers.PrimaryKeyRelatedField(queryset=Market.objects.all())
     trader_name = serializers.CharField(max_length=100, read_only=True)
     choice = serializers.BooleanField()
+    price_at_trade = serializers.DecimalField(
+        max_digits=5, decimal_places=4, coerce_to_string=False, read_only=True,
+    )
     created_at = serializers.DateTimeField(read_only=True)
 
     def validate_market(self, market):
@@ -67,6 +74,7 @@ class MarketSerializer(serializers.ModelSerializer):
     approved = serializers.BooleanField(read_only=True)
     approved_at = serializers.DateTimeField(read_only=True)
     approved_by_name = serializers.CharField(source='approved_by.username', read_only=True)
+    is_closed = serializers.SerializerMethodField()
 
     class Meta:
         model = Market
@@ -74,5 +82,8 @@ class MarketSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'category', 'category_name',
             'created_at', 'end_date', 'is_resolved', 'resolved_outcome',
             'image_url', 'yes_count', 'no_count', 'yes_percentage',
-            'approved', 'approved_at', 'approved_by_name',
+            'approved', 'approved_at', 'approved_by_name', 'is_closed',
         ]
+
+    def get_is_closed(self, obj):
+        return obj.end_date <= timezone.now()

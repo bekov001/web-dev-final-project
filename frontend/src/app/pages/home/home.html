@@ -1,66 +1,127 @@
-<div class="home-container">
-  <div class="hero">
-    <h1>Prediction Markets</h1>
-    <p>Bet on the future. Will it happen or not?</p>
-  </div>
+<section class="front-page">
+  <header class="front-head">
+    <span class="dateline">{{ today | date:'MMMM d, y' }}</span>
+    <h1 class="lede">
+      Markets
+    </h1>
+    <hr class="rule-2 rule-red" />
+    <nav class="tab-row" role="tablist">
+      <button
+        role="tab"
+        class="tab-btn"
+        [class.on]="activeTab === 'active'"
+        (click)="selectTab('active')"
+      >Active</button>
+      <button
+        role="tab"
+        class="tab-btn"
+        [class.on]="activeTab === 'resolved'"
+        (click)="selectTab('resolved')"
+      >Resolved</button>
+    </nav>
+  </header>
 
   @if (errorMessage) {
-    <div class="error-banner">{{ errorMessage }}</div>
+    <aside class="bulletin bulletin-err">
+      <span class="dateline">Error</span>
+      <p>{{ errorMessage }}</p>
+    </aside>
   }
 
-  <div class="controls">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search markets..."
-      [(ngModel)]="searchQuery"
-      (input)="onSearchChange()"
-    />
-
-    <div class="category-tabs">
-      <button
-        class="cat-btn"
-        [class.active]="selectedCategory === 0"
-        (click)="filterByCategory(0)"
-      >All</button>
-      @for (cat of categories; track cat.id) {
+  <section class="sifter">
+    <div class="sifter-search">
+      <span class="dateline">Search</span>
+      <input
+        type="text"
+        class="paper-input"
+        placeholder="Search markets…"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+      />
+    </div>
+    <div class="sifter-cats">
+      <span class="dateline">Category</span>
+      <div class="cat-row">
         <button
           class="cat-btn"
-          [class.active]="selectedCategory === cat.id"
-          (click)="filterByCategory(cat.id)"
-        >{{ cat.icon }} {{ cat.name }}</button>
-      }
+          [class.on]="selectedCategory === 0"
+          (click)="filterByCategory(0)"
+        >All</button>
+        @for (cat of categories; track cat.id) {
+          <button
+            class="cat-btn"
+            [class.on]="selectedCategory === cat.id"
+            (click)="filterByCategory(cat.id)"
+          >{{ cat.name }}</button>
+        }
+      </div>
     </div>
-  </div>
+  </section>
+
+  <hr class="rule" />
 
   @if (isLoading) {
-    <div class="empty-state">Loading markets...</div>
+    <div class="empty-state">
+      <p>Loading…</p>
+    </div>
   } @else if (filteredMarkets.length > 0) {
-    <div class="markets-grid">
-      @for (market of filteredMarkets; track market.id) {
-        <a [routerLink]="['/markets', market.id]" class="market-card">
-          <div class="card-header">
-            <span class="category-badge">{{ market.category_name }}</span>
+    <section class="markets-grid" aria-label="Markets">
+      @for (market of filteredMarkets; track market.id; let idx = $index) {
+        <a
+          [routerLink]="['/markets', market.id]"
+          class="news-card"
+          [class.news-card--lead]="idx === 0"
+          [style.animation-delay.ms]="idx * 45"
+        >
+          <div class="news-card__meta">
+            <span class="news-card__kicker">{{ market.category_name | uppercase }}</span>
+            <span class="news-card__sep">·</span>
+            <span class="news-card__date">Ends {{ market.end_date | date:'MMM d' }}</span>
             @if (market.is_resolved) {
-              <span class="resolved-badge">Resolved</span>
+              <span class="news-card__flag flag-resolved">
+                {{ market.resolved_outcome ? 'RESOLVED · YES' : 'RESOLVED · NO' }}
+              </span>
+            } @else if (market.is_closed) {
+              <span class="news-card__flag flag-resolved">CLOSED</span>
             }
           </div>
-          <h3 class="card-title">{{ market.title }}</h3>
-          <div class="probability-bar">
-            <div class="yes-bar" [style.width.%]="market.yes_percentage"></div>
+
+          <h2 class="news-card__head">{{ market.title }}</h2>
+
+          <div class="news-card__odds">
+            <div class="odds-col odds-yes">
+              <span class="odds-label">Yes</span>
+              <span class="odds-num">{{ market.yes_percentage }}<sup>%</sup></span>
+              <span class="odds-sub">{{ market.yes_count }} trades</span>
+            </div>
+            <div class="odds-sep" aria-hidden="true"></div>
+            <div class="odds-col odds-no">
+              <span class="odds-label">No</span>
+              <span class="odds-num">{{ 100 - market.yes_percentage }}<sup>%</sup></span>
+              <span class="odds-sub">{{ market.no_count }} trades</span>
+            </div>
           </div>
-          <div class="probability-labels">
-            <span class="yes-label">Yes {{ market.yes_percentage }}%</span>
-            <span class="no-label">No {{ 100 - market.yes_percentage }}%</span>
+
+          <div class="odds-bar" aria-hidden="true">
+            <div class="odds-bar__yes" [style.width.%]="market.yes_percentage"></div>
           </div>
-          <div class="card-footer">
-            <span class="volume">{{ market.yes_count + market.no_count }} trades</span>
-            <span class="end-date">Ends {{ market.end_date | date:'mediumDate' }}</span>
-          </div>
+
+          <footer class="news-card__foot">
+            <span>{{ market.yes_count + market.no_count }} trades</span>
+            <span class="read-more">Open →</span>
+          </footer>
         </a>
       }
-    </div>
+    </section>
   } @else {
-    <div class="empty-state">No markets found</div>
+    <div class="empty-state">
+      <p>
+        @if (activeTab === 'resolved') {
+          No resolved markets yet.
+        } @else {
+          No markets found.
+        }
+      </p>
+    </div>
   }
-</div>
+</section>

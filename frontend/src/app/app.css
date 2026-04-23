@@ -1,145 +1,199 @@
-.app-wrapper {
+.broadsheet {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-.glass-nav {
-  background: rgba(10, 10, 26, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.95rem 2rem 1.25rem;
+/* ── Dateline ticker bar ─────────────────────────────── */
+.dateline-bar {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 1px solid var(--ink);
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.ticker {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  padding: 0.45rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: ticker 60s linear infinite;
+}
+.ticker > span { padding-right: 2rem; }
+.dateline-bar:hover .ticker { animation-play-state: paused; }
+
+/* ── Masthead ─────────────────────────────────────────── */
+.masthead {
+  max-width: var(--max);
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.6rem var(--gutter) 0;
+}
+
+.edition {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  padding-top: 0.2rem;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2em;
+  line-height: 1;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: clamp(3rem, 9.5vw, 7.25rem);
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.mark-kbtu { font-weight: 900; }
+.mark-amp {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+  padding: 0 0.05em;
+  position: relative;
+  top: -0.1em;
+}
+.mark-predict {
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+}
+
+.tagline {
+  text-align: center;
+  margin: 0.3rem auto 1.1rem;
+  max-width: 46rem;
+  font-size: 0.95rem;
+  color: var(--ink-60);
+  font-style: italic;
+  font-variation-settings: "opsz" 14, "SOFT" 80;
+}
+
+.rule-thick { transform-origin: left; animation: ruleGrow 0.6s cubic-bezier(.2,.7,.2,1) both; }
+
+/* ── Folio nav ───────────────────────────────────────── */
+.folio {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  overflow: visible;
+  gap: 1rem;
+  padding: 0.6rem 0 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
-
-.nav-brand .logo {
-  display: flex;
-  align-items: baseline;
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-.logo-poly {
-  color: #fff;
-  font-weight: 800;
-}
-
-.logo-predict {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-}
-
-.nav-links {
+.folio-left, .folio-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.4rem;
+  flex-wrap: wrap;
 }
 
-.nav-links a {
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0.4rem 0;
-  transition: color 0.2s;
-  border-bottom: none;
-}
-
-.nav-links a:hover {
-  color: #007bff;
-}
-
-.nav-links a.active {
-  color: #007bff;
-  border-bottom: none;
-}
-
-.create-btn {
-  display: inline-block;
+.folio-link {
   position: relative;
-  z-index: 2;
-  color: #007bff !important;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  line-height: 1.2;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  padding: 0.25rem 0;
+  color: var(--ink-80);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.folio-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.folio-link.on { color: var(--ink); border-bottom-color: var(--ink); }
+
+.folio-flag {
+  color: var(--accent);
+  animation: inkFade 0.4s ease both;
+}
+.folio-flag::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 999px;
+  margin-right: 0.5em;
+  vertical-align: 1px;
+  animation: inkFade 1.2s ease-in-out infinite alternate;
 }
 
-.create-btn:hover {
-  background-color: #007bff;
-  color: white !important;
-}
-
-.create-btn.active {
-  background-color: #007bff;
-  color: white !important;
-}
-
-.logout-btn {
-  border: none;
+.folio-btn {
   background: transparent;
-  color: rgba(255, 255, 255, 0.65);
-  cursor: pointer;
-  font-size: 0.95rem;
+  border: none;
+  padding: 0.25rem 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--ink-60);
 }
+.folio-btn:hover { color: var(--accent); }
 
-.logout-btn:hover {
-  color: #ff6b6b;
+.folio-byline {
+  font-style: italic;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  color: var(--ink-60);
 }
-
-/* Auth nav styles */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.points-badge {
-  background: rgba(46, 204, 113, 0.15);
-  color: #2ecc71;
-  padding: 0.3rem 0.7rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
-.username {
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.logout-btn {
-  color: rgba(255, 71, 87, 0.7) !important;
-  cursor: pointer;
-  font-size: 0.85rem;
-  border-bottom: none !important;
-}
-
-.logout-btn:hover {
-  color: #ff4757 !important;
-}
-
-.login-btn {
-  color: #007bff !important;
-  border: 1px solid #007bff !important;
-  padding: 0.35rem 1rem !important;
-  border-radius: 8px;
+.folio-name {
+  font-family: var(--font-display);
+  font-style: italic;
   font-weight: 600;
+  font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.folio-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.folio-chip em {
+  font-style: normal;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+.folio-cta { color: var(--accent); }
+
+/* ── Colophon footer ─────────────────────────────────── */
+.colophon {
+  margin-top: auto;
+  max-width: var(--max);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--gutter);
+}
+.colophon-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2rem;
+  padding: 1.2rem 0 2rem;
+  color: var(--ink-60);
 }
 
-.login-btn:hover {
-  background: #007bff;
-  color: #fff !important;
+/* ── Responsive masthead ─────────────────────────────── */
+@media (max-width: 780px) {
+  .wordmark { font-size: clamp(2.5rem, 14vw, 4.5rem); }
+  .folio { flex-direction: column; align-items: stretch; }
+  .folio-left, .folio-right { justify-content: center; }
+  .colophon-inner { flex-direction: column; gap: 0.5rem; text-align: center; }
 }

@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>KBTU Predict — Defense Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:      #f1ebdc;
+    --paper-2:    #e7deca;
+    --paper-3:    #dcd1b8;
+    --ink:        #171411;
+    --ink-80:     rgba(23, 20, 17, 0.82);
+    --ink-60:     rgba(23, 20, 17, 0.60);
+    --ink-40:     rgba(23, 20, 17, 0.40);
+    --ink-20:     rgba(23, 20, 17, 0.20);
+    --ink-10:     rgba(23, 20, 17, 0.10);
+
+    --accent:     #b8271f;
+    --accent-ink: #7a1a14;
+    --up:         #1b5e4d;
+    --up-ink:     #0f3d32;
+
+    --font-display: "Fraunces", "Playfair Display", Georgia, "Times New Roman", serif;
+    --font-body:    "Fraunces", Georgia, "Times New Roman", serif;
+    --font-mono:    "JetBrains Mono", "SFMono-Regular", ui-monospace, Consolas, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-variation-settings: "opsz" 14, "SOFT" 30, "WONK" 0;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+    background-color: #c4b89c;
+    padding: 32px 16px;
+  }
+
+  .deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  /* ── A slide is a single broadsheet page ────────────────── */
+  .slide {
+    width: 1280px;
+    height: 720px;
+    background-color: var(--paper);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+      radial-gradient(1200px 400px at 50% -10%, rgba(0,0,0,0.06), transparent 70%);
+    background-repeat: repeat, no-repeat;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  /* ── Sticky black ticker bar (like the live site) ──────── */
+  .ticker-bar {
+    background: var(--ink);
+    color: var(--paper);
+    overflow: hidden;
+  }
+  .ticker {
+    display: flex;
+    gap: 2rem;
+    padding: 0.5rem 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ticker > span { padding-right: 2rem; }
+
+  /* ── Masthead ───────────────────────────────────────── */
+  .masthead {
+    padding: 0.9rem 3rem 0;
+  }
+  .edition-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+    padding-bottom: 0.4rem;
+  }
+  .edition-line .center { color: var(--ink); font-weight: 700; }
+
+  .wordmark {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.18em;
+    line-height: 1;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+    font-size: 3.6rem;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    padding: 0.1rem 0;
+  }
+  .mark-amp {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 500;
+    padding: 0 0.05em;
+    position: relative;
+    top: -0.1em;
+  }
+  .mark-predict {
+    font-style: italic;
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  }
+
+  .tagline {
+    text-align: center;
+    margin: 0.15rem 0 0.6rem;
+    font-size: 0.9rem;
+    color: var(--ink-60);
+    font-style: italic;
+    font-variation-settings: "opsz" 14, "SOFT" 80;
+  }
+
+  .rule { display: block; height: 1px; background: var(--ink); border: 0; }
+  .rule-2 { display: block; height: 2px; background: var(--ink); border: 0; }
+  .rule-thick { display: block; height: 4px; background: var(--ink); border: 0; }
+  .rule-red { background: var(--accent); }
+
+  /* Tiny folio nav strip under the masthead */
+  .folio {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.55rem 0 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-80);
+  }
+  .folio .left, .folio .right { display: flex; gap: 1.4rem; align-items: center; }
+  .folio .on { color: var(--accent); font-weight: 700; }
+  .folio .chip {
+    border: 1px solid var(--ink);
+    padding: 0.18rem 0.5rem;
+    background: var(--paper);
+  }
+
+  /* ── Body area (varies per slide) ──────────────────────── */
+  .body {
+    padding: 1.4rem 3rem 1.2rem;
+    overflow: hidden;
+  }
+
+  .dateline {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+  }
+
+  /* ── Colophon footer ───────────────────────────────────── */
+  .colophon {
+    padding: 0.8rem 3rem 1.1rem;
+  }
+  .colophon-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 0.7rem;
+    color: var(--ink-60);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .page-num { color: var(--ink); font-weight: 700; }
+
+  /* ════════════════════════════════════════════════════════
+     SLIDE 1 — front page
+     ════════════════════════════════════════════════════════ */
+  .lede {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 10, "WONK" 1;
+    font-size: 4.4rem;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.8rem;
+  }
+  .lede em {
+    font-style: italic;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-weight: 700;
+  }
+
+  .standfirst {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.45;
+    color: var(--ink-80);
+    max-width: 38rem;
+    margin-bottom: 1.1rem;
+    font-variation-settings: "opsz" 24, "SOFT" 80, "WONK" 1;
+  }
+
+  .frontpage {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2.2rem;
+    height: 100%;
+  }
+
+  .byline-block {
+    border-top: 1px solid var(--ink);
+    padding-top: 0.7rem;
+    margin-top: 0.4rem;
+  }
+  .byline-block .label { display: block; margin-bottom: 0.4rem; }
+  .byline-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .byline-list li {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.05rem;
+    font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  }
+
+  /* mock card on the right column */
+  .col-right {
+    border-left: 1px solid var(--ink);
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .market-card {
+    border: 1px solid var(--ink);
+    background: var(--paper-2);
+    padding: 1.1rem 1.2rem;
+  }
+  .market-card .cat {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .market-card .q {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    margin-bottom: 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  .pct-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+  .pct-row .yes-pct {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--up);
+    font-variation-settings: "opsz" 96;
+  }
+  .pct-row .no-pct {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-60);
+  }
+  .gauge {
+    height: 6px;
+    background: var(--accent);
+    position: relative;
+    border: 1px solid var(--ink);
+  }
+  .gauge > span {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    background: var(--up);
+    width: 67%;
+  }
+  .yn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+  }
+  .yn button {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .yn .yes { background: var(--up); color: var(--paper); border-color: var(--up); }
+  .yn .no { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+  }
+
+  .stack-strip {
+    border: 1px solid var(--ink);
+    border-left: 6px solid var(--accent);
+    background: var(--paper-2);
+    padding: 0.7rem 0.9rem;
+  }
+  .stack-strip .label { display: block; margin-bottom: 0.4rem; }
+  .stack-strip .pills { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .pill {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     SLIDE 2 / 3 — section pages with columns
+     ════════════════════════════════════════════════════════ */
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 0.7rem;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 3rem;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-weight: 700;
+  }
+  .section-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+  }
+
+  .columns-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .columns-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  .col {
+    padding: 0.4rem 1.2rem;
+    border-right: 1px solid var(--ink);
+  }
+  .col:first-child { padding-left: 0; }
+  .col:last-child { border-right: none; padding-right: 0; }
+
+  .col-head {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+  .col-head em {
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "SOFT" 100, "WONK" 1;
+    color: var(--accent);
+  }
+  .col-kicker {
+    margin-bottom: 0.6rem;
+  }
+
+  .col-rule { height: 1px; background: var(--ink); margin: 0.5rem 0 0.7rem; }
+
+  .col-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .col-list li {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: var(--ink-80);
+    padding-left: 1.1rem;
+    position: relative;
+    font-variation-settings: "opsz" 14, "SOFT" 30;
+  }
+  .col-list li::before {
+    content: "§";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+  .col-list li b {
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  }
+  code, .mono {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: var(--paper-2);
+    padding: 0.05rem 0.3rem;
+    border: 1px solid var(--ink-20);
+    color: var(--accent-ink);
+  }
+
+  .tag-fbv, .tag-cbv {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.4rem;
+    margin-left: 0.3rem;
+    vertical-align: 0.1em;
+    font-weight: 700;
+    border: 1px solid var(--ink);
+  }
+  .tag-fbv { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .tag-cbv { background: var(--up); color: var(--paper); border-color: var(--up); }
+
+  /* Routes table — newspaper schedule */
+  .schedule {
+    border: 1px solid var(--ink);
+    background: var(--paper-2);
+    margin-top: 0.5rem;
+  }
+  .schedule .row {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    border-bottom: 1px solid var(--ink-20);
+    padding: 0.4rem 0.7rem;
+  }
+  .schedule .row:last-child { border-bottom: none; }
+  .schedule .path {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-ink);
+    font-weight: 700;
+  }
+  .schedule .desc {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink-80);
+    font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     SLIDE 4 — closing remarks
+     ════════════════════════════════════════════════════════ */
+  .bulletin {
+    border: 1px solid var(--ink);
+    border-left: 6px solid var(--accent);
+    background: var(--paper-2);
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .bulletin .label { display: block; margin-bottom: 0.3rem; }
+  .bulletin .text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    font-variation-settings: "opsz" 24, "SOFT" 80, "WONK" 1;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    margin: 0.8rem 0 1rem;
+  }
+  .stat {
+    padding: 0.7rem 0.9rem;
+    border-right: 1px solid var(--ink);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat .num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  }
+  .stat .lbl {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+    margin-top: 0.25rem;
+  }
+
+  .deliverables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--ink);
+  }
+  .deliverable {
+    padding: 0.65rem 0.9rem;
+    border-right: 1px solid var(--ink-20);
+    border-bottom: 1px solid var(--ink-20);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+    font-variation-settings: "opsz" 14, "SOFT" 30;
+  }
+  .deliverable:nth-child(2n) { border-right: none; }
+  .deliverable:nth-last-child(-n+2) { border-bottom: none; }
+  .deliverable .check {
+    width: 22px; height: 22px;
+    border: 1px solid var(--ink);
+    background: var(--accent);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .signoff {
+    text-align: center;
+    margin-top: 1.4rem;
+  }
+  .signoff .thirty {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: 0.5em;
+    color: var(--ink);
+    padding-left: 0.5em;
+  }
+  .signoff .small {
+    margin-top: 0.4rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink-60);
+    font-size: 0.95rem;
+    font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  }
+
+  .closing-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2rem;
+  }
+
+  /* ── Print to PDF ──────────────────────────────────────── */
+  @page {
+    size: 1280px 720px;
+    margin: 0;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .deck { gap: 0; }
+    .slide {
+      box-shadow: none;
+      page-break-after: always;
+      break-after: page;
+    }
+    .slide:last-child { page-break-after: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ════════════════════════════════════════════════════
+       SLIDE 1 — FRONT PAGE
+       ════════════════════════════════════════════════════ -->
+  <section class="slide">
+
+    <div class="ticker-bar">
+      <div class="ticker">
+        <span>KBTU PREDICT · ALMATY · THURSDAY, APRIL 23, 2026 · DEFENSE EDITION · A STUDENT PREDICTION MARKET ·</span>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <div class="edition-line">
+        <span>Vol. I · No. 01</span>
+        <span class="center">The Gazette of Forecasts</span>
+        <span>Defense Edition</span>
+      </div>
+      <div class="wordmark">
+        <span class="mark-kbtu">KBTU</span>
+        <span class="mark-amp">·</span>
+        <span class="mark-predict">Predict</span>
+      </div>
+      <p class="tagline">A student prediction market.</p>
+      <hr class="rule-thick" />
+      <nav class="folio">
+        <div class="left">
+          <span class="on">Markets</span>
+          <span>Create</span>
+          <span>Pending</span>
+        </div>
+        <div class="right">
+          <span class="chip">100 pts</span>
+          <span>Sign in →</span>
+        </div>
+      </nav>
+      <hr class="rule" />
+    </header>
+
+    <div class="body">
+      <div class="frontpage">
+
+        <div>
+          <span class="dateline">Front Page · Final Project Defense</span>
+          <h1 class="lede">Bet on what <em>happens next.</em></h1>
+          <p class="standfirst">A full-stack prediction-market platform where students stake virtual points on real-world outcomes — moderated, gamified, and delivered as a daily broadsheet.</p>
+
+          <div class="stack-strip">
+            <span class="dateline label">The Press · Stack</span>
+            <div class="pills">
+              <span class="pill">Angular 20</span>
+              <span class="pill">Standalone Components</span>
+              <span class="pill">Django REST</span>
+              <span class="pill">SimpleJWT</span>
+              <span class="pill">SQLite</span>
+            </div>
+          </div>
+
+          <div class="byline-block">
+            <span class="dateline label">By the editors</span>
+            <ul class="byline-list">
+              <li>Anuar Batyrbekov</li>
+              <li>Zhaisan Yerali</li>
+              <li>Yermekkhan Yerasyl</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-right">
+          <span class="dateline">Featured market</span>
+
+          <div class="market-card">
+            <div class="cat">⚽ Sports · Football</div>
+            <div class="q">Will Kazakhstan reach the 2026 World Cup play-offs?</div>
+
+            <div class="pct-row">
+              <span class="yes-pct">67%</span>
+              <span class="no-pct">NO · 33%</span>
+            </div>
+            <div class="gauge"><span></span></div>
+
+            <div class="yn">
+              <button class="yes">▲ Buy YES</button>
+              <button class="no">▼ Buy NO</button>
+            </div>
+
+            <div class="meta-row">
+              <span>247 trades</span>
+              <span>Closes in 14 days</span>
+            </div>
+          </div>
+
+          <div class="bulletin" style="margin: 0;">
+            <span class="dateline label">Bulletin</span>
+            <div style="font-family: var(--font-display); font-style: italic; font-size: 0.95rem; line-height: 1.4;">
+              Every account opens with <b style="font-weight:700;">100 points</b>. Each trade costs one. Skin in the game.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════
+       SLIDE 2 — BACKEND
+       ════════════════════════════════════════════════════ -->
+  <section class="slide">
+
+    <div class="ticker-bar">
+      <div class="ticker">
+        <span>SECTION B · ENGINE ROOM · DJANGO REST FRAMEWORK · MODELS · VIEWS · SERIALIZERS · PERMISSIONS ·</span>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <div class="edition-line">
+        <span>Section B</span>
+        <span class="center">The Engine Room</span>
+        <span>backend/markets/</span>
+      </div>
+      <hr class="rule" />
+    </header>
+
+    <div class="body">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Backend Architecture</span>
+          <h2 class="section-title">Django <em>REST</em> Framework</h2>
+        </div>
+        <span class="dateline">4 models · 3 FBV · 7 CBV · JWT</span>
+      </div>
+
+      <div class="columns-2">
+
+        <div class="col">
+          <span class="dateline col-kicker">I. The Schema</span>
+          <h3 class="col-head">Four <em>models</em> wire the world together.</h3>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><b>UserProfile</b> — <code>OneToOneField</code> to User; <code>DecimalField</code> points for fractional payouts; auto-created via <code>post_save</code> signal.</li>
+            <li><b>Category</b> — name, description, icon for filtering the front page.</li>
+            <li><b>Market</b> — title, end_date, <code>ForeignKey</code> to Category; custom <code>ActiveMarketManager</code>; <code>yes_probability</code> property.</li>
+            <li><b>Trade</b> — <code>ForeignKey</code> to Market &amp; User; <code>BooleanField</code> choice; <code>price_at_trade</code> snapshot.</li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <span class="dateline col-kicker">II. The Gatekeepers</span>
+          <h3 class="col-head">Auth on <em>JWT</em>; payouts in atomic blocks.</h3>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><b>SimpleJWT</b> issues access &amp; refresh tokens at <code>/auth/login/</code> and <code>/auth/refresh/</code>.</li>
+            <li>Custom <b>IsModeratorOrAdmin</b> permission guards the moderation queue, approve and resolve endpoints.</li>
+            <li>Each trade <b>deducts one point</b>, snapshots the YES / NO price, and runs in <code>transaction.atomic()</code>.</li>
+            <li>On resolution, winners are paid <b>1 / price_at_trade</b> — a classic prediction-market payout.</li>
+          </ul>
+        </div>
+
+        <div class="col" style="border-top: 1px solid var(--ink); padding-top: 0.9rem; margin-top: 0.9rem;">
+          <span class="dateline col-kicker">III. Function-Based Views <span class="tag-fbv">FBV</span></span>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><code>register_view</code> — POST signup, returns JWT pair.</li>
+            <li><code>me_view</code> — GET current profile with role flags.</li>
+            <li><code>trade_list_create</code> — GET / POST trades, prices &amp; deducts points.</li>
+          </ul>
+        </div>
+
+        <div class="col" style="border-top: 1px solid var(--ink); padding-top: 0.9rem; margin-top: 0.9rem;">
+          <span class="dateline col-kicker">IV. Class-Based Views <span class="tag-cbv">CBV</span></span>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><b>MarketDetailView</b> — full <b>CRUD</b>: GET / PUT / DELETE.</li>
+            <li><b>MarketListCreateView</b>, <b>CategoryListView</b> — collection endpoints with <code>?status=active|resolved|all</code>.</li>
+            <li><b>PendingMarketListView</b>, <b>MarketApproveView</b> — approval flow.</li>
+            <li><b>AwaitingResolutionListView</b>, <b>MarketResolveView</b> — settle outcomes &amp; pay winners.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="colophon">
+      <hr class="rule-2" />
+      <div class="colophon-inner">
+        <span>backend/markets/ · views.py · models.py · permissions.py</span>
+        <span class="page-num">Page 02 of 04</span>
+      </div>
+    </footer>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════
+       SLIDE 3 — FRONTEND
+       ════════════════════════════════════════════════════ -->
+  <section class="slide">
+
+    <div class="ticker-bar">
+      <div class="ticker">
+        <span>SECTION C · THE PRESS ROOM · ANGULAR 20 · STANDALONE COMPONENTS · HTTPCLIENT · INTERCEPTORS · @IF / @FOR ·</span>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <div class="edition-line">
+        <span>Section C</span>
+        <span class="center">The Press Room</span>
+        <span>frontend/src/app/</span>
+      </div>
+      <hr class="rule" />
+    </header>
+
+    <div class="body">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Frontend Implementation</span>
+          <h2 class="section-title"><em>Angular</em> &amp; the broadsheet.</h2>
+        </div>
+        <span class="dateline">5 routes · HTTP service · JWT interceptor</span>
+      </div>
+
+      <div class="columns-2" style="margin-bottom: 0.7rem;">
+
+        <div class="col">
+          <span class="dateline col-kicker">I. Routing — app.routes.ts</span>
+          <h3 class="col-head">Five front-page <em>sections.</em></h3>
+          <div class="schedule">
+            <div class="row"><span class="path">/</span><span class="desc">Home — market feed</span></div>
+            <div class="row"><span class="path">/markets/:id</span><span class="desc">Market detail &amp; trades</span></div>
+            <div class="row"><span class="path">/create</span><span class="desc">Submit a new market</span></div>
+            <div class="row"><span class="path">/auth</span><span class="desc">Sign in &amp; register</span></div>
+            <div class="row"><span class="path">/pending</span><span class="desc">Moderator queue</span></div>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="dateline col-kicker">II. The Wire — HTTP Layer</span>
+          <h3 class="col-head">One <em>service</em> wraps every endpoint.</h3>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><b>Api service</b> uses <code>HttpClient</code> &amp; returns <code>Observable</code>; every call piped through <code>catchError</code>.</li>
+            <li>Methods include <code>getMarkets</code>, <code>createTrade</code>, <code>approveMarket</code>, <code>resolveMarket</code>, <code>getCurrentUser</code>.</li>
+            <li><b>Functional</b> <code>HttpInterceptorFn</code> attaches <code>Authorization: Bearer</code> on every request.</li>
+            <li>Auto-logout on <b>401</b>; protected GETs are retried anonymously.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="columns-3" style="border-top: 1px solid var(--ink); padding-top: 0.8rem;">
+
+        <div class="col">
+          <span class="dateline col-kicker">III. Control Flow</span>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><code>@if</code> guards every auth-only block.</li>
+            <li><code>@for</code> renders markets and trade lists.</li>
+            <li><code>@else</code> draws the empty-state notices.</li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <span class="dateline col-kicker">IV. Two-Way Binding</span>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><code>[(ngModel)]</code> on the auth form fields.</li>
+            <li><code>[(ngModel)]</code> on the create-market form.</li>
+            <li>Reactive validation flags errors live.</li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <span class="dateline col-kicker">V. Event Binding</span>
+          <hr class="col-rule" />
+          <ul class="col-list">
+            <li><code>(click)</code> Buy YES / Buy NO.</li>
+            <li><code>(click)</code> Approve / reject markets.</li>
+            <li><code>(submit)</code> Login &amp; register flows.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="colophon">
+      <hr class="rule-2" />
+      <div class="colophon-inner">
+        <span>services/api.ts · interceptors/auth.interceptor.ts · app.routes.ts</span>
+        <span class="page-num">Page 03 of 04</span>
+      </div>
+    </footer>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════
+       SLIDE 4 — EDITORIAL / CLOSING
+       ════════════════════════════════════════════════════ -->
+  <section class="slide">
+
+    <div class="ticker-bar">
+      <div class="ticker">
+        <span>EDITORIAL · LEADER COLUMN · WHY IT MATTERS · DELIVERABLES · THIRTY ·</span>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <div class="edition-line">
+        <span>Editorial</span>
+        <span class="center">The Leader Column</span>
+        <span>Closing remarks</span>
+      </div>
+      <hr class="rule" />
+    </header>
+
+    <div class="body">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Conclusion &amp; Value</span>
+          <h2 class="section-title">Why it <em>matters.</em></h2>
+        </div>
+        <span class="dateline">Final project · KBTU · 2026</span>
+      </div>
+
+      <div class="closing-grid">
+
+        <div>
+          <div class="bulletin">
+            <span class="dateline label">Editor's note</span>
+            <div class="text">
+              KBTU Predict turns crowd opinion on sports, politics, crypto and campus life into a public probability — then settles the market and pays the winners by <b style="font-weight:700;">1 / price_at_trade</b>.
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat"><div class="num">4</div><div class="lbl">Models</div></div>
+            <div class="stat"><div class="num">10</div><div class="lbl">Endpoints</div></div>
+            <div class="stat"><div class="num">5</div><div class="lbl">Routes</div></div>
+            <div class="stat"><div class="num">3</div><div class="lbl">Roles</div></div>
+          </div>
+
+        </div>
+
+        <div>
+          <span class="dateline" style="display:block; margin-bottom: 0.5rem;">On the press · Deliverables</span>
+          <div class="deliverables">
+            <div class="deliverable"><span class="check">✓</span><span>GitHub repo, full source.</span></div>
+            <div class="deliverable"><span class="check">✓</span><span>Postman collection, every route.</span></div>
+            <div class="deliverable"><span class="check">✓</span><span><code>seed.py</code> for demo data.</span></div>
+            <div class="deliverable"><span class="check">✓</span><span><code>runserver</code> + <code>ng serve</code>.</span></div>
+            <div class="deliverable"><span class="check">✓</span><span>Three roles, tailored UI.</span></div>
+            <div class="deliverable"><span class="check">✓</span><span>Pending, approval &amp; resolution.</span></div>
+          </div>
+
+          <div class="bulletin" style="margin-top: 1rem;">
+            <span class="dateline label">Differentiators</span>
+            <div class="text">
+              Not just CRUD: a <b style="font-weight:700;">moderation pipeline</b>, a <b style="font-weight:700;">points economy</b> with fractional payouts, and live YES / NO prices computed from real trades.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="colophon">
+      <hr class="rule-2" />
+      <div class="colophon-inner">
+        <span>KBTU Predict · A student project · For educational use only</span>
+        <span class="page-num">Page 04 of 04</span>
+      </div>
+    </footer>
+
+  </section>
+
+</div>
+
+</body>
+</html>

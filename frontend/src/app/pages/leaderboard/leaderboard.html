@@ -1,0 +1,44 @@
+<section class="board">
+  <header class="board-head">
+    <a routerLink="/" class="back-link">← Back</a>
+    <span class="dateline">Standings</span>
+    <h1 class="board-title">Leaderboard</h1>
+    <p class="board-sub">Top traders by points.</p>
+    <hr class="rule-2 rule-red" />
+  </header>
+
+  @if (errorMessage) {
+    <aside class="bulletin bulletin-err">
+      <span class="dateline">Error</span>
+      <p>{{ errorMessage }}</p>
+    </aside>
+  }
+
+  @if (isLoading) {
+    <div class="empty-state"><p>Loading…</p></div>
+  } @else if (rows.length === 0) {
+    <div class="empty-state"><p>No players yet.</p></div>
+  } @else {
+    <ol class="board-list">
+      @for (row of rows; track row.username; let idx = $index) {
+        <li
+          class="board-row"
+          [class.board-row--top]="idx < 3"
+          [class.board-row--mine]="row.username === myUsername"
+          [style.animation-delay.ms]="idx * 30"
+        >
+          <span class="board-rank">{{ idx + 1 | number:'2.0-0' }}</span>
+          <span class="board-name">
+            {{ row.username }}
+            @if (row.username === myUsername) {
+              <span class="board-you">you</span>
+            }
+          </span>
+          <span class="board-points">
+            <em>{{ row.points | number:'1.0-2' }}</em> pts
+          </span>
+        </li>
+      }
+    </ol>
+  }
+</section>

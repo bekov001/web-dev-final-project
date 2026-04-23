@@ -12,6 +12,7 @@ import { AuthService } from './services/auth';
 })
 export class App {
   title = 'KBTU Predict';
+  today = new Date();
 
   constructor(public auth: AuthService) {}
 

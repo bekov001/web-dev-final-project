@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    points = models.IntegerField(default=100)
+    points = models.DecimalField(max_digits=12, decimal_places=4, default=100)
 
     def __str__(self):
         return f'{self.user.username} ({self.points} pts)'
@@ -70,12 +70,20 @@ class Market(models.Model):
             return 50
         return round(self.yes_count / total * 100)
 
+    @property
+    def yes_probability(self):
+        total = self.yes_count + self.no_count
+        if total == 0:
+            return 0.5
+        return self.yes_count / total
+
 
 class Trade(models.Model):
     market = models.ForeignKey(Market, on_delete=models.CASCADE, related_name='trades')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trades', null=True, blank=True)
     trader_name = models.CharField(max_length=100)
     choice = models.BooleanField()  # True = Yes, False = No
+    price_at_trade = models.DecimalField(max_digits=5, decimal_places=4, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

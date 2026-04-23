@@ -13,7 +13,11 @@ urlpatterns = [
     path('categories/', views.CategoryListView.as_view()),
     path('markets/', views.MarketListCreateView.as_view()),
     path('markets/pending/', views.PendingMarketListView.as_view()),
+    path('markets/awaiting-resolution/', views.AwaitingResolutionListView.as_view()),
     path('markets/<int:pk>/', views.MarketDetailView.as_view()),
     path('markets/<int:pk>/approve/', views.MarketApproveView.as_view()),
+    path('markets/<int:pk>/close/', views.MarketCloseView.as_view()),
+    path('markets/<int:pk>/resolve/', views.MarketResolveView.as_view()),
     path('trades/', views.trade_list_create),
+    path('leaderboard/', views.LeaderboardView.as_view()),
 ]

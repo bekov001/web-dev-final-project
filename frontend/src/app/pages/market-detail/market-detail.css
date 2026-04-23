@@ -1,207 +1,362 @@
-.detail-container {
-  max-width: 800px;
+.article {
+  max-width: 860px;
   margin: 0 auto;
-  padding: 0 1.5rem 3rem;
+  padding: 1.6rem var(--gutter) 0;
 }
 
+/* Back link */
 .back-link {
   display: inline-block;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 1.4rem;
+  padding-bottom: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
 }
-.back-link:hover { color: #2ecc71; }
+.back-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-.market-header { margin-bottom: 2rem; }
-.market-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0.5rem 0;
+/* Bulletin */
+.bulletin {
+  max-width: 860px;
+  margin: 1rem auto 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--ink);
+  border-left: 6px solid var(--accent);
+  background: var(--paper-2);
 }
-.description {
-  color: rgba(255,255,255,0.6);
-  line-height: 1.6;
-}
-.meta {
+.bulletin .dateline { display: block; margin-bottom: 0.25rem; }
+.bulletin p { font-style: italic; }
+
+/* Article head */
+.article__head { margin-bottom: 1rem; }
+.article__kickline {
   display: flex;
-  gap: 1.5rem;
-  margin-top: 0.8rem;
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.4);
-}
-.category-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  background: rgba(46,204,113,0.12);
-  color: #2ecc71;
-}
-
-.error-banner {
-  max-width: 800px;
-  margin: 1rem auto;
-  background: rgba(255,71,87,0.15);
-  border: 1px solid rgba(255,71,87,0.3);
-  color: #ff4757;
-  padding: 0.8rem 1.2rem;
-  border-radius: 10px;
-  text-align: center;
-}
-
-/* Probability */
-.probability-section {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-.big-prob {
-  display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-60);
   margin-bottom: 1rem;
-  text-align: center;
 }
-.prob-yes, .prob-no {
+.kicker { color: var(--accent); font-weight: 700; }
+.sep { color: var(--ink-40); }
+.dateline.inline { letter-spacing: 0.2em; }
+
+.stamp {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid currentColor;
+  margin-left: auto;
+}
+.stamp-live { color: var(--up); background: rgba(27,94,77,0.08); }
+.stamp-pending { color: var(--accent); background: rgba(184,39,31,0.08); }
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+}
+
+.standfirst {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 1;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--ink-80);
+  max-width: 38em;
+}
+.standfirst::first-letter {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: 3.4em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.08em 0.1em -0.1em 0;
+  color: var(--accent);
+}
+
+/* ── Odds plate ───────────────────────────────────────── */
+.odds-plate {
+  margin: 1.4rem 0;
+  padding: 1.2rem 1.4rem 1.2rem;
+  background: var(--paper-2);
+  border: 1px solid var(--ink);
+}
+
+.plate-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+.mono-right { letter-spacing: 0.16em; }
+
+.plate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0.2rem 0 0.4rem;
+}
+.plate-sep { width: 1px; background: var(--ink); height: 100%; min-height: 90px; }
+
+.plate-col {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
-.prob-number { font-size: 2.5rem; font-weight: 800; }
-.prob-yes .prob-number { color: #2ecc71; }
-.prob-no .prob-number { color: #ff4757; }
-.prob-label { font-size: 0.9rem; color: rgba(255,255,255,0.6); }
-.prob-count { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
-.probability-bar {
-  height: 10px;
-  background: rgba(255,71,87,0.3);
-  border-radius: 5px;
-  overflow: hidden;
+.plate-no { text-align: right; align-items: flex-end; }
+.plate-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-60);
 }
-.yes-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #2ecc71, #27ae60);
-  border-radius: 5px;
-  transition: width 0.5s;
+.plate-yes .plate-label { color: var(--up); }
+.plate-no .plate-label { color: var(--accent); }
+
+.plate-num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.plate-num sup {
+  font-size: 0.36em;
+  vertical-align: super;
+  font-weight: 500;
+  margin-left: 0.1em;
+  color: var(--ink-60);
+}
+.plate-yes .plate-num { color: var(--up); }
+.plate-no .plate-num { color: var(--accent); }
+.plate-sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-60);
+  letter-spacing: 0.14em;
 }
 
-/* Trade */
-.trade-section, .trades-section {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+.plate-bar {
+  position: relative;
+  height: 8px;
+  background: var(--accent);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 0.4rem;
 }
-.trade-section h2, .trades-section h2 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
+.plate-bar__yes {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--up);
+  transition: width 0.6s cubic-bezier(.2,.7,.2,1);
 }
-.trade-form {
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.trade-input {
-  flex: 1;
-  min-width: 200px;
-  padding: 0.7rem 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  font-size: 0.95rem;
-  outline: none;
-}
-.trade-input:focus { border-color: #2ecc71; }
-.trade-buttons { display: flex; gap: 0.5rem; }
-.btn-yes, .btn-no {
-  padding: 0.7rem 1.5rem;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-yes {
-  background: rgba(46,204,113,0.2);
-  color: #2ecc71;
-  border: 1px solid rgba(46,204,113,0.3);
-}
-.btn-yes:hover { background: rgba(46,204,113,0.35); transform: translateY(-1px); }
-.btn-no {
-  background: rgba(255,71,87,0.2);
-  color: #ff4757;
-  border: 1px solid rgba(255,71,87,0.3);
-}
-.btn-no:hover { background: rgba(255,71,87,0.35); transform: translateY(-1px); }
 
-/* Trades list */
-.trade-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+/* ── Trade desk ───────────────────────────────────────── */
+.trade-desk {
+  margin: 1.6rem 0;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
 }
-.trade-item:last-child { border-bottom: none; }
-.trade-name { font-weight: 500; }
-.trade-choice {
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 0.8rem;
-}
-.trade-choice.yes { background: rgba(46,204,113,0.2); color: #2ecc71; }
-.trade-choice.no { background: rgba(255,71,87,0.2); color: #ff4757; }
-.trade-time { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
-.empty { color: rgba(255,255,255,0.4); }
-
-/* Admin */
-.admin-actions {
-  margin-top: 1rem;
-  text-align: right;
-}
-.btn-delete {
-  padding: 0.6rem 1.2rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,71,87,0.3);
-  background: rgba(255,71,87,0.1);
-  color: #ff4757;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-delete:hover { background: rgba(255,71,87,0.25); }
-
-/* Trade cost & login prompt */
-.trade-cost {
-  color: rgba(255,255,255,0.4);
-  font-size: 0.85rem;
+.trade-desk__head { margin-bottom: 0.6rem; }
+.trade-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--ink-80);
   margin-bottom: 0.8rem;
 }
+.trade-note strong { font-style: normal; font-weight: 700; color: var(--ink); }
+
+.trade-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.press {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  font-family: var(--font-display);
+  color: var(--ink);
+  text-align: left;
+  gap: 0.2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s, color 0.2s;
+}
+.press + .press { border-left: 0; }
+.press__pre {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.press__main {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.press__pct {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+.press__pct sup { font-size: 0.7em; vertical-align: super; }
+
+.press.yes:hover { background: var(--up); color: var(--paper); border-color: var(--up); }
+.press.yes:hover .press__pre,
+.press.yes:hover .press__pct { color: var(--paper); opacity: 0.85; }
+.press.no:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.press.no:hover .press__pre,
+.press.no:hover .press__pct { color: var(--paper); opacity: 0.85; }
+
+.press:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: var(--paper-3);
+}
+
 .login-prompt {
   text-align: center;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 .login-prompt p {
-  color: rgba(255,255,255,0.5);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-80);
   margin-bottom: 0.8rem;
 }
-.btn-login {
+.btn-paper {
   display: inline-block;
-  padding: 0.6rem 1.5rem;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.2s;
+  padding: 0.65rem 1.3rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
 }
-.btn-login:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+.btn-paper:hover { background: var(--accent); border-color: var(--accent); }
+
+/* ── Ledger ───────────────────────────────────────────── */
+.ledger {
+  margin: 1.6rem 0;
+}
+.ledger__head { margin-bottom: 0.6rem; }
+.ledger__empty {
+  padding: 1rem;
+  border: 1px dotted var(--ink-40);
+  font-style: italic;
+  color: var(--ink-60);
+  text-align: center;
+}
+
+.ledger-list {
+  list-style: none;
+  border-top: 1px solid var(--ink);
+}
+.ledger-row {
+  display: grid;
+  grid-template-columns: 10rem 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0.2rem;
+  border-bottom: 1px dotted var(--ink-40);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.ledger-time { color: var(--ink-60); letter-spacing: 0.08em; }
+.ledger-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-variation-settings: "opsz" 14, "SOFT" 80, "WONK" 1;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.ledger-side {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.ledger-side.yes { color: var(--up); }
+.ledger-side.no { color: var(--accent); }
+
+/* ── Admin ────────────────────────────────────────────── */
+.admin-actions {
+  text-align: right;
+  padding: 1rem 0 2rem;
+}
+.admin-actions .dateline { margin-right: 0.8rem; }
+.btn-danger {
+  padding: 0.55rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  transition: background 0.2s, color 0.2s;
+}
+.btn-danger:hover { background: var(--accent); color: var(--paper); }
+
+.btn-warn {
+  padding: 0.55rem 1rem;
+  margin-right: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  transition: background 0.2s, color 0.2s;
+}
+.btn-warn:hover { background: var(--ink); color: var(--paper); }
+
+@media (max-width: 640px) {
+  .plate-num { font-size: 2.8rem; }
+  .plate-sep { min-height: 70px; }
+  .trade-buttons { grid-template-columns: 1fr; }
+  .press + .press { border-left: 1px solid var(--ink); border-top: 0; }
+  .ledger-row { grid-template-columns: 1fr auto; }
+  .ledger-time { grid-column: 1 / -1; font-size: 0.75rem; }
 }

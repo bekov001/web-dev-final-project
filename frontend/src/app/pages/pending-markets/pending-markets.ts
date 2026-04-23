@@ -14,6 +14,7 @@ import { Market } from '../../models/product';
 })
 export class PendingMarkets implements OnInit {
   markets: Market[] = [];
+  awaiting: Market[] = [];
   errorMessage = '';
   successMessage = '';
 
@@ -25,12 +26,26 @@ export class PendingMarkets implements OnInit {
 
   ngOnInit() {
     this.loadPending();
+    this.loadAwaiting();
   }
 
   loadPending() {
     this.api.getPendingMarkets().subscribe({
       next: (data) => {
         this.markets = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = err.message;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  loadAwaiting() {
+    this.api.getAwaitingResolutionMarkets().subscribe({
+      next: (data) => {
+        this.awaiting = data;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -50,6 +65,21 @@ export class PendingMarkets implements OnInit {
       },
       error: (err) => {
         this.errorMessage = err.message;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  resolveMarket(marketId: number, outcome: boolean) {
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.api.resolveMarket(marketId, outcome).subscribe({
+      next: () => {
+        this.successMessage = `Market resolved as ${outcome ? 'YES' : 'NO'}.`;
+        this.loadAwaiting();
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.detail ?? err.message;
         this.cdr.detectChanges();
       },
     });

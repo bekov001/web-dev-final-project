@@ -1,32 +1,100 @@
-<div class="pending-container">
-  <div class="header">
-    <h1>Pending Markets</h1>
-    <a routerLink="/" class="back-link">Back to markets</a>
-  </div>
+<section class="editor-desk">
+  <header class="desk-head">
+    <a routerLink="/" class="back-link">← Back</a>
+    <span class="dateline">Pending review</span>
+    <h1 class="desk-title">Pending markets</h1>
+    <p class="desk-sub">Markets waiting for moderator approval.</p>
+    <hr class="rule-2 rule-red" />
+  </header>
 
   @if (successMessage) {
-    <div class="success-banner">{{ successMessage }}</div>
+    <aside class="bulletin bulletin-ok">
+      <span class="dateline">Approved</span>
+      <p>{{ successMessage }}</p>
+    </aside>
   }
 
   @if (errorMessage) {
-    <div class="error-banner">{{ errorMessage }}</div>
+    <aside class="bulletin bulletin-err">
+      <span class="dateline">Error</span>
+      <p>{{ errorMessage }}</p>
+    </aside>
   }
 
   @if (!auth.isModeratorOrAdmin) {
-    <div class="error-banner">Login as moderator/admin to approve markets.</div>
-  } @else if (markets.length === 0) {
-    <div class="empty-state">No pending markets.</div>
+    <aside class="bulletin bulletin-err">
+      <span class="dateline">Restricted</span>
+      <p>Moderator access required.</p>
+    </aside>
   } @else {
-    <div class="list">
-      @for (market of markets; track market.id) {
-        <div class="item">
-          <div class="meta">
-            <h3>{{ market.title }}</h3>
-            <p>{{ market.description }}</p>
-          </div>
-          <button class="approve-btn" (click)="approveMarket(market.id)">Approve</button>
-        </div>
-      }
-    </div>
+    <h2 class="section-head">Pending approval</h2>
+    @if (markets.length === 0) {
+      <div class="empty-desk">
+        <p>No pending markets.</p>
+      </div>
+    } @else {
+      <ol class="pending-list">
+        @for (market of markets; track market.id; let idx = $index) {
+          <li class="pending-item" [style.animation-delay.ms]="idx * 50">
+            <span class="pending-num">{{ idx + 1 | number:'2.0-0' }}</span>
+            <div class="pending-body">
+              <div class="pending-meta">
+                <span class="kicker">{{ market.category_name | uppercase }}</span>
+                <span class="sep">·</span>
+                <span class="dateline inline">Created {{ market.created_at | date:'MMM d' }}</span>
+                <span class="sep">·</span>
+                <span class="dateline inline">Closes {{ market.end_date | date:'MMM d' }}</span>
+              </div>
+              <h3 class="pending-title">{{ market.title }}</h3>
+              <p class="pending-desc">{{ market.description }}</p>
+            </div>
+            <div class="pending-actions">
+              <button class="btn-approve" (click)="approveMarket(market.id)">
+                <span>Approve</span>
+                <span class="arrow">→</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ol>
+    }
+
+    <hr class="rule-2" />
+
+    <h2 class="section-head">Awaiting resolution</h2>
+    @if (awaiting.length === 0) {
+      <div class="empty-desk">
+        <p>No markets awaiting resolution.</p>
+      </div>
+    } @else {
+      <ol class="pending-list">
+        @for (market of awaiting; track market.id; let idx = $index) {
+          <li class="pending-item" [style.animation-delay.ms]="idx * 50">
+            <span class="pending-num">{{ idx + 1 | number:'2.0-0' }}</span>
+            <div class="pending-body">
+              <div class="pending-meta">
+                <span class="kicker">{{ market.category_name | uppercase }}</span>
+                <span class="sep">·</span>
+                <span class="dateline inline">Closed {{ market.end_date | date:'MMM d, HH:mm' }}</span>
+                <span class="sep">·</span>
+                <span class="dateline inline">YES {{ market.yes_percentage }}%</span>
+              </div>
+              <h3 class="pending-title">{{ market.title }}</h3>
+              <p class="pending-desc">{{ market.description }}</p>
+            </div>
+            <div class="pending-actions resolve-actions">
+              <button class="btn-approve btn-yes" (click)="resolveMarket(market.id, true)">
+                <span>Resolve YES</span>
+                <span class="arrow">▲</span>
+              </button>
+              <button class="btn-approve btn-no" (click)="resolveMarket(market.id, false)">
+                <span>Resolve NO</span>
+                <span class="arrow">▼</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ol>
+    }
   }
-</div>
+</section>
