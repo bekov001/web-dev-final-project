@@ -12,10 +12,15 @@
       @if (auth.isModeratorOrAdmin) {
         <a routerLink="/pending" routerLinkActive="active">Pending</a>
       }
-      @if (!auth.currentUser) {
-        <a routerLink="/login" routerLinkActive="active">Login</a>
+
+      @if (auth.user$ | async; as user) {
+        <div class="user-info">
+          <span class="points-badge">{{ user.points }} pts</span>
+          <span class="username">{{ user.username }}</span>
+          <a class="logout-btn" (click)="logout()">Logout</a>
+        </div>
       } @else {
-        <button class="logout-btn" (click)="logout()">Logout ({{ auth.currentUser.username }})</button>
+        <a routerLink="/auth" routerLinkActive="active" class="login-btn">Sign In</a>
       }
     </div>
   </nav>

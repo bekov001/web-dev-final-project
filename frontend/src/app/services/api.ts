@@ -84,21 +84,7 @@ export class Api {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Something went wrong';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
-    } else if (error.status === 400) {
-      errorMessage = 'Invalid data';
-    } else if (error.status === 404) {
-      errorMessage = 'Not found';
-    } else if (error.status === 401) {
-      errorMessage = 'Unauthorized';
-    } else if (error.status === 403) {
-      errorMessage = 'Forbidden';
-    } else if (error.status === 0) {
-      errorMessage = 'Server is not running';
-    }
     console.error('API Error:', error);
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => error);
   }
 }

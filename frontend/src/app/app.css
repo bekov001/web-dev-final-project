@@ -97,3 +97,49 @@
 .logout-btn:hover {
   color: #ff6b6b;
 }
+
+/* Auth nav styles */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.points-badge {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.username {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.logout-btn {
+  color: rgba(255, 71, 87, 0.7) !important;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-bottom: none !important;
+}
+
+.logout-btn:hover {
+  color: #ff4757 !important;
+}
+
+.login-btn {
+  color: #007bff !important;
+  border: 1px solid #007bff !important;
+  padding: 0.35rem 1rem !important;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.login-btn:hover {
+  background: #007bff;
+  color: #fff !important;
+}
