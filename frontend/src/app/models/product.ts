@@ -34,6 +34,7 @@ export interface Trade {
 
 export interface CurrentUser {
   username: string;
+  points: number;
   is_staff: boolean;
   is_superuser: boolean;
   is_moderator_or_admin: boolean;
