@@ -42,10 +42,12 @@
     <div class="form-group">
       <label>End Date</label>
       <input
-        type="date"
+        type="datetime-local"
         [(ngModel)]="endDate"
-        class="form-input"
+        [min]="minEndDate"
+        class="form-input form-date"
       />
+      <span class="field-hint">When the market closes for trading.</span>
     </div>
 
     <button class="btn-create" (click)="createMarket()">Create Market</button>

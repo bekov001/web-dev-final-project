@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +18,11 @@ export class Auth {
   errorMessage = '';
   loading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   toggleMode() {
     this.isLogin = !this.isLogin;
@@ -56,6 +60,7 @@ export class Auth {
             ? 'Invalid username or password'
             : 'Registration failed';
         }
+        this.cdr.detectChanges();
       }
     });
   }

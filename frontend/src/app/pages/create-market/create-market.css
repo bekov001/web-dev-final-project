@@ -71,6 +71,29 @@ h1 {
   border-color: #2ecc71;
 }
 
+.form-date {
+  color-scheme: dark;
+  font-variant-numeric: tabular-nums;
+}
+
+.form-date::-webkit-calendar-picker-indicator {
+  filter: invert(0.85) sepia(0.4) saturate(4) hue-rotate(75deg);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.form-date::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+}
+
 .form-select option {
   background: #1a1a2e;
   color: #fff;
