@@ -38,11 +38,13 @@
     <!-- Trade section -->
     <div class="trade-section">
       <h2>Place Your Prediction</h2>
-      @if (auth.isLoggedIn) {
+      @if (!market.approved) {
+        <p class="pending-note">This market is pending moderator approval and cannot accept trades yet.</p>
+      } @else if (auth.isLoggedIn) {
         <p class="trade-cost">Each prediction costs 1 point</p>
         <div class="trade-buttons">
-          <button class="btn-yes" (click)="placeTrade(true)">Buy Yes</button>
-          <button class="btn-no" (click)="placeTrade(false)">Buy No</button>
+          <button class="btn-yes" (click)="placeTrade(true)" [disabled]="!canPlaceTrade">Buy Yes</button>
+          <button class="btn-no" (click)="placeTrade(false)" [disabled]="!canPlaceTrade">Buy No</button>
         </div>
       } @else {
         <div class="login-prompt">
@@ -73,5 +75,9 @@
     <div class="admin-actions">
       <button class="btn-delete" (click)="deleteMarket()">Delete Market</button>
     </div>
+
+    @if (!market.approved) {
+      <div class="pending-banner">Pending approval from a moderator/admin.</div>
+    }
   </div>
 }
