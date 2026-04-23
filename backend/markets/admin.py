@@ -4,9 +4,13 @@ from .models import Category, Market, Trade
 
 @admin.register(Market)
 class MarketAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'created_at', 'approved', 'approved_by', 'approved_at')
-    list_filter = ('approved', 'category', 'is_resolved')
-    readonly_fields = ('approved_at', 'approved_by')
+    list_display = (
+        'title', 'category', 'created_at',
+        'approved', 'approved_by', 'approved_at',
+        'rejected', 'rejected_by', 'rejected_at',
+    )
+    list_filter = ('approved', 'rejected', 'category', 'is_resolved')
+    readonly_fields = ('approved_at', 'approved_by', 'rejected_at', 'rejected_by')
     search_fields = ('title', 'description')
 
 

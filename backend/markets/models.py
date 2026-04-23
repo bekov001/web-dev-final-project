@@ -4,7 +4,11 @@ from django.db import models
 
 class ActiveMarketManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_resolved=False, approved=True)
+        return super().get_queryset().filter(
+            is_resolved=False,
+            approved=True,
+            rejected=False,
+        )
 
 
 class Category(models.Model):
@@ -31,6 +35,9 @@ class Market(models.Model):
     approved = models.BooleanField(default=False)
     approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_markets')
     approved_at = models.DateTimeField(null=True, blank=True)
+    rejected = models.BooleanField(default=False)
+    rejected_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='rejected_markets')
+    rejected_at = models.DateTimeField(null=True, blank=True)
 
     objects = models.Manager()
     active = ActiveMarketManager()

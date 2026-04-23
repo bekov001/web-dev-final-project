@@ -58,6 +58,12 @@ export class Api {
     );
   }
 
+  rejectMarket(id: number): Observable<Market> {
+    return this.http.post<Market>(`${this.baseUrl}/markets/${id}/reject/`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getCurrentUser(): Observable<CurrentUser> {
     return this.http.get<CurrentUser>(`${this.baseUrl}/auth/me/`).pipe(
       catchError(this.handleError)

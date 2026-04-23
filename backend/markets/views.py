@@ -79,7 +79,7 @@ class PendingMarketListView(APIView):
     permission_classes = [IsAuthenticated, IsModeratorOrAdmin]
 
     def get(self, request):
-        markets = Market.objects.filter(approved=False).order_by('-created_at')
+        markets = Market.objects.filter(approved=False, rejected=False).order_by('-created_at')
         serializer = MarketSerializer(markets, many=True)
         return Response(serializer.data)
 
@@ -134,6 +134,30 @@ class MarketApproveView(APIView):
         market.approved = True
         market.approved_at = timezone.now()
         market.approved_by = request.user
+        market.rejected = False
+        market.rejected_at = None
+        market.rejected_by = None
+        market.save()
+
+        serializer = MarketSerializer(market)
+        return Response(serializer.data)
+
+
+class MarketRejectView(APIView):
+    permission_classes = [IsAuthenticated, IsModeratorOrAdmin]
+
+    def post(self, request, pk):
+        try:
+            market = Market.objects.get(pk=pk)
+        except Market.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        market.approved = False
+        market.approved_at = None
+        market.approved_by = None
+        market.rejected = True
+        market.rejected_at = timezone.now()
+        market.rejected_by = request.user
         market.save()
 
         serializer = MarketSerializer(market)

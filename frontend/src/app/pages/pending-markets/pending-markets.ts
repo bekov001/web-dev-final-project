@@ -54,4 +54,19 @@ export class PendingMarkets implements OnInit {
       },
     });
   }
+
+  rejectMarket(marketId: number) {
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.api.rejectMarket(marketId).subscribe({
+      next: () => {
+        this.successMessage = 'Market rejected.';
+        this.loadPending();
+      },
+      error: (err) => {
+        this.errorMessage = err.message;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 }

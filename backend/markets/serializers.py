@@ -42,6 +42,9 @@ class MarketSerializer(serializers.ModelSerializer):
     approved = serializers.BooleanField(read_only=True)
     approved_at = serializers.DateTimeField(read_only=True)
     approved_by_name = serializers.CharField(source='approved_by.username', read_only=True)
+    rejected = serializers.BooleanField(read_only=True)
+    rejected_at = serializers.DateTimeField(read_only=True)
+    rejected_by_name = serializers.CharField(source='rejected_by.username', read_only=True)
 
     class Meta:
         model = Market
@@ -50,4 +53,5 @@ class MarketSerializer(serializers.ModelSerializer):
             'created_at', 'end_date', 'is_resolved', 'resolved_outcome',
             'image_url', 'yes_count', 'no_count', 'yes_percentage',
             'approved', 'approved_at', 'approved_by_name',
+            'rejected', 'rejected_at', 'rejected_by_name',
         ]

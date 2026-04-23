@@ -46,6 +46,21 @@
   cursor: pointer;
 }
 
+.actions {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.reject-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 0.6rem 0.95rem;
+  background: #ff5a5a;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .error-banner {
   background: rgba(255, 71, 87, 0.15);
   border: 1px solid rgba(255, 71, 87, 0.3);

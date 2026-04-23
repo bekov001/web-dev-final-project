@@ -24,7 +24,10 @@
             <h3>{{ market.title }}</h3>
             <p>{{ market.description }}</p>
           </div>
-          <button class="approve-btn" (click)="approveMarket(market.id)">Approve</button>
+          <div class="actions">
+            <button class="approve-btn" (click)="approveMarket(market.id)">Approve</button>
+            <button class="reject-btn" (click)="rejectMarket(market.id)">Reject</button>
+          </div>
         </div>
       }
     </div>
