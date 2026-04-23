@@ -104,6 +104,7 @@ h1 {
 }
 
 .btn-create {
+  display: block;
   width: 100%;
   padding: 0.9rem;
   border-radius: 12px;
@@ -115,9 +116,19 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 0.5rem;
+  line-height: 1.2;
+  vertical-align: middle;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
 }
 
 .btn-create:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(46,204,113,0.3);
+}
+
+.btn-create:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(46,204,113,0.25);
 }

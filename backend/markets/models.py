@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -20,7 +21,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class ActiveMarketManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_resolved=False)
+        return super().get_queryset().filter(is_resolved=False, approved=True)
 
 
 class Category(models.Model):
@@ -44,6 +45,9 @@ class Market(models.Model):
     is_resolved = models.BooleanField(default=False)
     resolved_outcome = models.BooleanField(null=True, blank=True)
     image_url = models.URLField(blank=True)
+    approved = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_markets')
+    approved_at = models.DateTimeField(null=True, blank=True)
 
     objects = models.Manager()
     active = ActiveMarketManager()

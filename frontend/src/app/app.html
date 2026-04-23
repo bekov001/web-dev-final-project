@@ -9,6 +9,9 @@
     <div class="nav-links">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Markets</a>
       <a routerLink="/create" routerLinkActive="active" class="create-btn">+ Create</a>
+      @if (auth.isModeratorOrAdmin) {
+        <a routerLink="/pending" routerLinkActive="active">Pending</a>
+      }
 
       @if (auth.user$ | async; as user) {
         <div class="user-info">

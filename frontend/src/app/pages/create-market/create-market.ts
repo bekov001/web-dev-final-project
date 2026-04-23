@@ -47,8 +47,15 @@ export class CreateMarket implements OnInit {
       category: this.selectedCategory,
       end_date: new Date(this.endDate).toISOString()
     }).subscribe({
-      next: (market) => {
-        this.router.navigate(['/markets', market.id]);
+      next: () => {
+        this.successMessage = 'Market created and sent for moderator/admin approval.';
+        this.errorMessage = '';
+        this.title = '';
+        this.description = '';
+        this.selectedCategory = 0;
+        this.endDate = '';
+        this.cdr.detectChanges();
+        this.router.navigate(['/']);
       },
       error: (err) => this.errorMessage = err.message
     });
