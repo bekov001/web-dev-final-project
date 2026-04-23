@@ -25,19 +25,9 @@ a {
 
 /* Убираем стандартные полосы прокрутки */
 ::-webkit-scrollbar {
-  width: 8px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #3b82f6;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+* {
+  scrollbar-width: none;
 }
