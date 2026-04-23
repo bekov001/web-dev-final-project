@@ -1,31 +1,52 @@
-<div class="app-wrapper">
-  <nav class="glass-nav">
-    <div class="nav-brand">
-      <a routerLink="/" class="logo">
-        <span class="logo-poly">KBTU</span><span class="logo-predict">Predict</span>
+<div class="broadsheet">
+  <div class="dateline-bar" role="presentation">
+    <div class="ticker">
+      <span>KBTU PREDICT &middot; ALMATY &middot; {{ today | date:'EEEE, MMMM d, y' | uppercase }} &middot; </span>
+      <span aria-hidden="true">KBTU PREDICT &middot; ALMATY &middot; {{ today | date:'EEEE, MMMM d, y' | uppercase }} &middot; </span>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="edition">
+      <a routerLink="/" class="wordmark" aria-label="KBTU Predict">
+        <span class="mark-kbtu">KBTU</span>
+        <span class="mark-amp">·</span>
+        <span class="mark-predict">Predict</span>
       </a>
     </div>
-
-    <div class="nav-links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Markets</a>
-      <a routerLink="/create" routerLinkActive="active" class="create-btn">+ Create</a>
-      @if (auth.isModeratorOrAdmin) {
-        <a routerLink="/pending" routerLinkActive="active">Pending</a>
-      }
-
-      @if (auth.user$ | async; as user) {
-        <div class="user-info">
-          <span class="points-badge">{{ user.points }} pts</span>
-          <span class="username">{{ user.username }}</span>
-          <a class="logout-btn" (click)="logout()">Logout</a>
-        </div>
-      } @else {
-        <a routerLink="/auth" routerLinkActive="active" class="login-btn">Sign In</a>
-      }
-    </div>
-  </nav>
+    <p class="tagline">A student prediction market.</p>
+    <hr class="rule-thick" />
+    <nav class="folio">
+      <div class="folio-left">
+        <a routerLink="/" routerLinkActive="on" [routerLinkActiveOptions]="{exact: true}" class="folio-link">Markets</a>
+        <a routerLink="/leaderboard" routerLinkActive="on" class="folio-link">Leaderboard</a>
+        <a routerLink="/create" routerLinkActive="on" class="folio-link">Create</a>
+        @if (auth.isModeratorOrAdmin) {
+          <a routerLink="/pending" routerLinkActive="on" class="folio-link folio-flag">Pending</a>
+        }
+      </div>
+      <div class="folio-right">
+        @if (auth.user$ | async; as user) {
+          <span class="folio-name">{{ user.username }}</span>
+          <span class="folio-chip"><em>{{ user.points | number:'1.0-2' }}</em> pts</span>
+          <button class="folio-link folio-btn" (click)="logout()">Sign out</button>
+        } @else {
+          <a routerLink="/auth" routerLinkActive="on" class="folio-link folio-cta">Sign in →</a>
+        }
+      </div>
+    </nav>
+    <hr class="rule" />
+  </header>
 
   <main>
     <router-outlet></router-outlet>
   </main>
+
+  <footer class="colophon">
+    <hr class="rule-2" />
+    <div class="colophon-inner">
+      <span class="dateline">KBTU Predict · student project</span>
+      <span class="dateline">For educational use only.</span>
+    </div>
+  </footer>
 </div>

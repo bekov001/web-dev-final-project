@@ -22,6 +22,7 @@ export interface Market {
   approved: boolean;
   approved_at: string | null;
   approved_by_name: string | null;
+  is_closed: boolean;
 }
 
 export interface Trade {
@@ -29,6 +30,7 @@ export interface Trade {
   market: number;
   trader_name: string;
   choice: boolean;
+  price_at_trade: number | null;
   created_at: string;
 }
 

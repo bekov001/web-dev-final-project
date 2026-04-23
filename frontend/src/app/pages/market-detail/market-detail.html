@@ -1,83 +1,127 @@
 @if (errorMessage) {
-  <div class="error-banner">{{ errorMessage }}</div>
+  <aside class="bulletin bulletin-err">
+    <span class="dateline">Error</span>
+    <p>{{ errorMessage }}</p>
+  </aside>
 }
 
 @if (market) {
-  <div class="detail-container">
-    <a routerLink="/" class="back-link">&larr; Back to markets</a>
+  <article class="article">
+    <a routerLink="/" class="back-link">← Back</a>
 
-    <div class="market-header">
-      <span class="category-badge">{{ market.category_name }}</span>
-      <h1>{{ market.title }}</h1>
-      <p class="description">{{ market.description }}</p>
-      <div class="meta">
-        <span>Created {{ market.created_at | date:'mediumDate' }}</span>
-        <span>Ends {{ market.end_date | date:'mediumDate' }}</span>
+    <header class="article__head">
+      <div class="article__kickline">
+        <span class="kicker">{{ market.category_name | uppercase }}</span>
+        <span class="sep">·</span>
+        <span class="dateline inline">Created {{ market.created_at | date:'MMM d, y' }}</span>
+        <span class="sep">·</span>
+        <span class="dateline inline">Closes {{ market.end_date | date:'MMM d, y' }}</span>
+        @switch (marketStatus) {
+          @case ('pending') { <span class="stamp stamp-pending">Pending</span> }
+          @case ('live') { <span class="stamp stamp-live">Live</span> }
+          @case ('closed') { <span class="stamp stamp-pending">Closed</span> }
+          @case ('resolved') {
+            <span class="stamp stamp-live">
+              Resolved — {{ market.resolved_outcome ? 'YES' : 'NO' }}
+            </span>
+          }
+        }
       </div>
-    </div>
 
-    <!-- Probability display -->
-    <div class="probability-section">
-      <div class="big-prob">
-        <div class="prob-yes">
-          <span class="prob-number">{{ market.yes_percentage }}%</span>
-          <span class="prob-label">Yes</span>
-          <span class="prob-count">{{ market.yes_count }} votes</span>
+      <h1 class="headline">{{ market.title }}</h1>
+      <p class="standfirst">{{ market.description }}</p>
+    </header>
+
+    <hr class="rule-2" />
+
+    <section class="odds-plate">
+      <div class="plate-top">
+        <span class="dateline">Odds</span>
+        <span class="dateline mono-right">{{ market.yes_count + market.no_count }} trades</span>
+      </div>
+      <div class="plate-grid">
+        <div class="plate-col plate-yes">
+          <span class="plate-label">Yes</span>
+          <span class="plate-num">{{ market.yes_percentage }}<sup>%</sup></span>
+          <span class="plate-sub">{{ market.yes_count }} trades</span>
         </div>
-        <div class="prob-no">
-          <span class="prob-number">{{ 100 - market.yes_percentage }}%</span>
-          <span class="prob-label">No</span>
-          <span class="prob-count">{{ market.no_count }} votes</span>
+        <div class="plate-sep" aria-hidden="true"></div>
+        <div class="plate-col plate-no">
+          <span class="plate-label">No</span>
+          <span class="plate-num">{{ 100 - market.yes_percentage }}<sup>%</sup></span>
+          <span class="plate-sub">{{ market.no_count }} trades</span>
         </div>
       </div>
-      <div class="probability-bar">
-        <div class="yes-bar" [style.width.%]="market.yes_percentage"></div>
+      <div class="plate-bar" aria-hidden="true">
+        <div class="plate-bar__yes" [style.width.%]="market.yes_percentage"></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Trade section -->
-    <div class="trade-section">
-      <h2>Place Your Prediction</h2>
+    <section class="trade-desk">
+      <header class="trade-desk__head">
+        <span class="dateline">Place a trade</span>
+      </header>
       @if (!market.approved) {
-        <p class="pending-note">This market is pending moderator approval and cannot accept trades yet.</p>
+        <p class="trade-note">Pending moderator approval.</p>
+      } @else if (market.is_resolved) {
+        <p class="trade-note">
+          Resolved — outcome was <strong>{{ market.resolved_outcome ? 'YES' : 'NO' }}</strong>.
+        </p>
+      } @else if (market.is_closed) {
+        <p class="trade-note">Market closed. Awaiting moderator resolution.</p>
       } @else if (auth.isLoggedIn) {
-        <p class="trade-cost">Each prediction costs 1 point</p>
+        <p class="trade-note">1 point per trade. Payout = 1 / price.</p>
         <div class="trade-buttons">
-          <button class="btn-yes" (click)="placeTrade(true)" [disabled]="!canPlaceTrade">Buy Yes</button>
-          <button class="btn-no" (click)="placeTrade(false)" [disabled]="!canPlaceTrade">Buy No</button>
+          <button class="press yes" (click)="placeTrade(true)" [disabled]="!canPlaceTrade">
+            <span class="press__pre">Buy</span>
+            <span class="press__main">Yes</span>
+            <span class="press__pct">{{ market.yes_percentage }}<sup>%</sup></span>
+          </button>
+          <button class="press no" (click)="placeTrade(false)" [disabled]="!canPlaceTrade">
+            <span class="press__pre">Buy</span>
+            <span class="press__main">No</span>
+            <span class="press__pct">{{ 100 - market.yes_percentage }}<sup>%</sup></span>
+          </button>
         </div>
       } @else {
         <div class="login-prompt">
-          <p>You need to sign in to place predictions</p>
-          <a routerLink="/auth" class="btn-login">Sign In</a>
+          <p>Sign in to trade.</p>
+          <a routerLink="/auth" class="btn-paper">Sign in →</a>
         </div>
       }
-    </div>
+    </section>
 
-    <!-- Recent trades -->
-    <div class="trades-section">
-      <h2>Recent Activity</h2>
+    <section class="ledger">
+      <header class="ledger__head">
+        <span class="dateline">Recent trades</span>
+      </header>
       @if (trades.length === 0) {
-        <p class="empty">No trades yet. Be the first!</p>
+        <p class="ledger__empty">No trades yet.</p>
+      } @else {
+        <ol class="ledger-list">
+          @for (trade of trades; track trade.id) {
+            <li class="ledger-row">
+              <span class="ledger-time">{{ trade.created_at | date:'MMM d, HH:mm' }}</span>
+              <span class="ledger-name">{{ trade.trader_name }}</span>
+              <span class="ledger-side" [class.yes]="trade.choice" [class.no]="!trade.choice">
+                {{ trade.choice ? '▲ YES' : '▼ NO' }}
+              </span>
+            </li>
+          }
+        </ol>
       }
-      @for (trade of trades; track trade.id) {
-        <div class="trade-item">
-          <span class="trade-name">{{ trade.trader_name }}</span>
-          <span class="trade-choice" [class.yes]="trade.choice" [class.no]="!trade.choice">
-            {{ trade.choice ? 'YES' : 'NO' }}
-          </span>
-          <span class="trade-time">{{ trade.created_at | date:'short' }}</span>
-        </div>
-      }
-    </div>
+    </section>
 
-    <!-- Admin actions -->
-    <div class="admin-actions">
-      <button class="btn-delete" (click)="deleteMarket()">Delete Market</button>
-    </div>
+    @if (auth.isModeratorOrAdmin) {
+      <hr class="rule" />
 
-    @if (!market.approved) {
-      <div class="pending-banner">Pending approval from a moderator/admin.</div>
+      <section class="admin-actions">
+        <span class="dateline">Admin</span>
+        @if (market.approved && !market.is_closed && !market.is_resolved) {
+          <button class="btn-warn" (click)="closeMarketNow()">Close early</button>
+        }
+        <button class="btn-danger" (click)="deleteMarket()">Delete market</button>
+      </section>
     }
-  </div>
+  </article>
 }

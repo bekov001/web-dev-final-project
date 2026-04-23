@@ -20,6 +20,8 @@ export class Home implements OnInit {
   searchQuery: string = '';
   errorMessage: string = '';
   isLoading: boolean = true;
+  activeTab: 'active' | 'resolved' = 'active';
+  today = new Date();
 
   constructor(private api: Api, private cdr: ChangeDetectorRef) {}
 
@@ -40,11 +42,11 @@ export class Home implements OnInit {
 
   loadMarkets() {
     this.isLoading = true;
-    this.api.getMarkets().subscribe({
+    this.api.getMarkets(undefined, this.activeTab).subscribe({
       next: (data) => {
         this.markets = data;
-        this.filteredMarkets = [...data];
         this.isLoading = false;
+        this.applyFilters();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -53,6 +55,12 @@ export class Home implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  selectTab(tab: 'active' | 'resolved') {
+    if (this.activeTab === tab) return;
+    this.activeTab = tab;
+    this.loadMarkets();
   }
 
   filterByCategory(categoryId: number) {

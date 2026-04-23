@@ -85,7 +85,16 @@ export class MarketDetail implements OnInit {
   }
 
   get canPlaceTrade() {
-    return this.market?.approved ?? false;
+    if (!this.market) return false;
+    return this.market.approved && !this.market.is_closed && !this.market.is_resolved;
+  }
+
+  get marketStatus(): 'pending' | 'live' | 'closed' | 'resolved' {
+    if (!this.market) return 'pending';
+    if (!this.market.approved) return 'pending';
+    if (this.market.is_resolved) return 'resolved';
+    if (this.market.is_closed) return 'closed';
+    return 'live';
   }
 
   deleteMarket() {
@@ -94,6 +103,20 @@ export class MarketDetail implements OnInit {
       next: () => this.router.navigate(['/']),
       error: (err) => {
         this.errorMessage = err.message;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  closeMarketNow() {
+    if (!this.market) return;
+    this.api.closeMarketNow(this.market.id).subscribe({
+      next: () => {
+        this.loadMarket(this.market!.id);
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.detail ?? err.message;
         this.cdr.detectChanges();
       }
     });

@@ -1,55 +1,84 @@
-<div class="create-container">
-  <a routerLink="/" class="back-link">&larr; Back to markets</a>
+<section class="file-form">
+  <a routerLink="/" class="back-link">← Back</a>
 
-  <h1>Create Market</h1>
-  <p class="subtitle">Ask a Yes/No question about the future</p>
+  <header class="file-head">
+    <span class="dateline">Create market</span>
+    <h1 class="file-title">New market</h1>
+    <p class="file-sub">A moderator will review your submission before it goes live.</p>
+    <hr class="rule-2 rule-red" />
+  </header>
 
   @if (errorMessage) {
-    <div class="error-banner">{{ errorMessage }}</div>
+    <aside class="bulletin bulletin-err">
+      <span class="dateline">Error</span>
+      <p>{{ errorMessage }}</p>
+    </aside>
   }
 
-  <div class="form-card">
-    <div class="form-group">
-      <label>Question</label>
+  <form class="sheet" (ngSubmit)="createMarket()">
+    <div class="sheet-row">
+      <label class="sheet-label" for="q-title">
+        <span class="dateline">Question</span>
+        <span class="hint">Yes/No only.</span>
+      </label>
       <input
+        id="q-title"
         type="text"
-        placeholder="Will Bitcoin hit $200k by 2027?"
+        class="sheet-input sheet-input--big"
+        placeholder="Will Real Madrid win the 2026 Champions League?"
         [(ngModel)]="title"
-        class="form-input"
+        name="title"
       />
     </div>
 
-    <div class="form-group">
-      <label>Description</label>
+    <div class="sheet-row">
+      <label class="sheet-label" for="q-desc">
+        <span class="dateline">Description</span>
+        <span class="hint">How does the market resolve?</span>
+      </label>
       <textarea
-        placeholder="Add context and resolution criteria..."
+        id="q-desc"
+        class="sheet-input sheet-textarea"
+        rows="5"
+        placeholder="Market resolves YES if Real Madrid wins the final; NO otherwise."
         [(ngModel)]="description"
-        class="form-textarea"
-        rows="4"
+        name="description"
       ></textarea>
     </div>
 
-    <div class="form-group">
-      <label>Category</label>
-      <select [(ngModel)]="selectedCategory" class="form-select">
-        <option [value]="0" disabled>Select a category</option>
-        @for (cat of categories; track cat.id) {
-          <option [value]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
-        }
-      </select>
+    <div class="sheet-grid">
+      <div class="sheet-row">
+        <label class="sheet-label" for="q-cat">
+          <span class="dateline">Category</span>
+        </label>
+        <select id="q-cat" class="sheet-input sheet-select" [(ngModel)]="selectedCategory" name="category">
+          <option [value]="0" disabled>— select —</option>
+          @for (cat of categories; track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="sheet-row">
+        <label class="sheet-label" for="q-end">
+          <span class="dateline">End date</span>
+          <span class="hint">When trading closes.</span>
+        </label>
+        <input
+          id="q-end"
+          type="datetime-local"
+          class="sheet-input sheet-date"
+          [(ngModel)]="endDate"
+          [min]="minEndDate"
+          name="endDate"
+        />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>End Date</label>
-      <input
-        type="datetime-local"
-        [(ngModel)]="endDate"
-        [min]="minEndDate"
-        class="form-input form-date"
-      />
-      <span class="field-hint">When the market closes for trading.</span>
-    </div>
+    <hr class="rule" />
 
-    <button class="btn-create" (click)="createMarket()">Create Market</button>
-  </div>
-</div>
+    <div class="sheet-actions">
+      <button type="submit" class="btn-submit">Submit →</button>
+    </div>
+  </form>
+</section>

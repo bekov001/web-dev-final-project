@@ -20,11 +20,10 @@ export class Api {
   }
 
   // Markets
-  getMarkets(categoryId?: number): Observable<Market[]> {
-    let url = `${this.baseUrl}/markets/`;
-    if (categoryId) {
-      url += `?category_id=${categoryId}`;
-    }
+  getMarkets(categoryId?: number, status: 'active' | 'resolved' = 'active'): Observable<Market[]> {
+    const params: string[] = [`status=${status}`];
+    if (categoryId) params.push(`category_id=${categoryId}`);
+    const url = `${this.baseUrl}/markets/?${params.join('&')}`;
     return this.http.get<Market[]>(url).pipe(catchError(this.handleError));
   }
 
@@ -56,6 +55,32 @@ export class Api {
     return this.http.post<Market>(`${this.baseUrl}/markets/${id}/approve/`, {}).pipe(
       catchError(this.handleError)
     );
+  }
+
+  getAwaitingResolutionMarkets(): Observable<Market[]> {
+    return this.http.get<Market[]>(`${this.baseUrl}/markets/awaiting-resolution/`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  resolveMarket(id: number, outcome: boolean): Observable<Market> {
+    return this.http.post<Market>(
+      `${this.baseUrl}/markets/${id}/resolve/`,
+      { outcome }
+    ).pipe(catchError(this.handleError));
+  }
+
+  closeMarketNow(id: number): Observable<Market> {
+    return this.http.post<Market>(
+      `${this.baseUrl}/markets/${id}/close/`,
+      {}
+    ).pipe(catchError(this.handleError));
+  }
+
+  getLeaderboard(): Observable<{ username: string; points: number }[]> {
+    return this.http.get<{ username: string; points: number }[]>(
+      `${this.baseUrl}/leaderboard/`
+    ).pipe(catchError(this.handleError));
   }
 
   getCurrentUser(): Observable<CurrentUser> {

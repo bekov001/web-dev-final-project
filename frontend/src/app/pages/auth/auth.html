@@ -1,29 +1,71 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <h1>{{ isLogin ? 'Sign In' : 'Sign Up' }}</h1>
-    <p class="subtitle">{{ isLogin ? 'Welcome back to KBTUPredict' : 'Create your account and get 100 points' }}</p>
+<section class="subscribe">
+  <a routerLink="/" class="back-link">← Back</a>
 
-    @if (errorMessage) {
-      <div class="error-banner">{{ errorMessage }}</div>
-    }
+  <div class="subscribe-grid">
+    <aside class="subscribe-aside">
+      <span class="dateline">KBTU Predict</span>
+      <h1 class="subscribe-headline">
+        {{ isLogin ? 'Welcome back' : 'Create account' }}
+      </h1>
+      <p class="subscribe-body">
+        {{ isLogin
+          ? 'Sign in to keep trading.'
+          : 'Start with 100 free points.' }}
+      </p>
+      <ul class="subscribe-perks">
+        <li><span class="mark">—</span> Create prediction markets.</li>
+        <li><span class="mark">—</span> Trade for 1 point per wager.</li>
+        <li><span class="mark">—</span> Track your stats in the ledger.</li>
+      </ul>
+    </aside>
 
-    <form (ngSubmit)="submit()">
-      <div class="field">
-        <label>Username</label>
-        <input type="text" [(ngModel)]="username" name="username" placeholder="Enter username" autocomplete="username" />
+    <form class="subscribe-form" (ngSubmit)="submit()">
+      <div class="form-top">
+        <span class="dateline">{{ isLogin ? 'Sign in' : 'Sign up' }}</span>
       </div>
+      <hr class="rule" />
+
+      @if (errorMessage) {
+        <div class="subscribe-error">
+          <span class="mark">✕</span>
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
+
       <div class="field">
-        <label>Password</label>
-        <input type="password" [(ngModel)]="password" name="password" placeholder="Enter password" autocomplete="current-password" />
+        <label for="sub-user"><span class="dateline">Username</span></label>
+        <input
+          id="sub-user"
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          autocomplete="username"
+          placeholder="username"
+        />
       </div>
+
+      <div class="field">
+        <label for="sub-pass"><span class="dateline">Password</span></label>
+        <input
+          id="sub-pass"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+        />
+      </div>
+
       <button type="submit" class="btn-submit" [disabled]="loading">
-        {{ loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up') }}
+        @if (loading) { Loading… }
+        @else { {{ isLogin ? 'Sign in →' : 'Sign up →' }} }
       </button>
-    </form>
 
-    <p class="toggle">
-      {{ isLogin ? "Don't have an account?" : 'Already have an account?' }}
-      <a (click)="toggleMode()">{{ isLogin ? 'Sign Up' : 'Sign In' }}</a>
-    </p>
+      <hr class="rule" />
+      <p class="toggle">
+        {{ isLogin ? 'No account?' : 'Already have an account?' }}
+        <a class="news-link" (click)="toggleMode()">{{ isLogin ? 'Sign up' : 'Sign in' }}</a>
+      </p>
+    </form>
   </div>
-</div>
+</section>

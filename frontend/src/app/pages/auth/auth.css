@@ -1,109 +1,199 @@
-.auth-container {
+.subscribe {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.6rem var(--gutter) 0;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 1.4rem;
+  padding-bottom: 1px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.back-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.subscribe-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  min-height: 520px;
+  overflow: hidden;
+}
+
+/* ── Aside (left column) ─────────────────────────────── */
+.subscribe-aside {
+  padding: 2rem 2rem 1.5rem;
+  background: var(--paper-2);
+  border-right: 1px solid var(--ink);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 100px);
-  padding: 2rem;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+.subscribe-aside::before {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  right: -1px;
+  bottom: 2rem;
+  width: 0;
+  border-right: 1px dashed var(--ink-20);
 }
 
-.auth-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 400px;
-}
-
-.auth-card h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
+.subscribe-headline {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 1;
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  color: var(--ink);
   margin-bottom: 0.3rem;
 }
-
-.subtitle {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.error-banner {
-  background: rgba(255, 71, 87, 0.15);
-  border: 1px solid rgba(255, 71, 87, 0.3);
-  color: #ff4757;
-  padding: 0.7rem 1rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-
-.field {
-  margin-bottom: 1.2rem;
-}
-
-.field label {
-  display: block;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 0.4rem;
+.subscribe-headline em {
+  font-style: italic;
   font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  color: var(--accent);
 }
+
+.subscribe-body {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink-80);
+}
+
+.subscribe-perks {
+  list-style: none;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.6rem 0;
+  margin: 0.5rem 0;
+}
+.subscribe-perks li {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.25rem 0;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: var(--ink);
+}
+.subscribe-perks .mark {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 600;
+  width: 1em;
+}
+
+.subscribe-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-60);
+  font-size: 0.92rem;
+  padding-top: 0.8rem;
+}
+
+/* ── Form (right column) ─────────────────────────────── */
+.subscribe-form {
+  padding: 2rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.form-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.mode-tag { color: var(--accent); }
+
+.subscribe-error {
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--accent);
+  background: rgba(184,39,31,0.08);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-style: italic;
+  animation: inkFade 0.3s ease both;
+}
+.subscribe-error .mark {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+  font-style: normal;
+}
+
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field label { margin-bottom: 0.1rem; }
 
 .field input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  font-size: 0.95rem;
+  padding: 0.75rem 0.2rem 0.55rem;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
   outline: none;
   transition: border-color 0.2s;
 }
-
-.field input:focus {
-  border-color: #007bff;
-}
+.field input::placeholder { color: var(--ink-40); font-style: italic; }
+.field input:focus { border-bottom-color: var(--accent); }
 
 .btn-submit {
-  width: 100%;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
+  padding: 0.8rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  transition: background 0.2s, letter-spacing 0.2s;
 }
-
-.btn-submit:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
+.btn-submit:hover { background: var(--accent); border-color: var(--accent); letter-spacing: 0.26em; }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; letter-spacing: 0.22em; }
 
 .toggle {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--ink-60);
+  font-size: 0.95rem;
+  padding-top: 0.4rem;
   text-align: center;
-  margin-top: 1.5rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.9rem;
 }
-
 .toggle a {
-  color: #007bff;
   cursor: pointer;
+  margin-left: 0.2rem;
+  color: var(--accent);
   font-weight: 600;
-  margin-left: 0.3rem;
+  font-style: normal;
 }
 
-.toggle a:hover {
-  text-decoration: underline;
+@media (max-width: 780px) {
+  .subscribe-grid { grid-template-columns: 1fr; }
+  .subscribe-aside { border-right: 0; border-bottom: 1px solid var(--ink); }
+  .subscribe-aside::before { display: none; }
 }
